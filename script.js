@@ -409,7 +409,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const savedTheme = localStorage.getItem('theme') || 'dark';
     applyTheme(savedTheme);
 
-    const savedLanguage = localStorage.getItem('language') || 'id';
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'id';
     setLanguage(savedLanguage);
     
     // Initialize flying flyers for hero section only
@@ -715,95 +715,75 @@ const translations = {
 const languageSelect = document.getElementById('language-select');
 
 function setLanguage(lang) {
-    if (!translations[lang]) {
-        console.warn(`Language "${lang}" not found in translations. Defaulting to \'id\'.`);
-        lang = 'id';
+    // Update all elements with data-lang-id and data-lang-en attributes
+    document.querySelectorAll('[data-lang-id], [data-lang-en]').forEach(element => {
+        if (lang === 'id') {
+            if (element.hasAttribute('data-lang-id')) {
+                element.textContent = element.getAttribute('data-lang-id');
+            }
+            if (element.hasAttribute('data-lang-placeholder-id')) {
+                element.placeholder = element.getAttribute('data-lang-placeholder-id');
+            }
+            if (element.hasAttribute('data-lang-aria-label-id')) {
+                element.setAttribute('aria-label', element.getAttribute('data-lang-aria-label-id'));
+            }
+            if (element.hasAttribute('data-lang-title-id')) {
+                element.title = element.getAttribute('data-lang-title-id');
+            }
+            if (element.hasAttribute('data-lang-alt-id')) {
+                element.alt = element.getAttribute('data-lang-alt-id');
+            }
+        } else if (lang === 'en') {
+            if (element.hasAttribute('data-lang-en')) {
+                element.textContent = element.getAttribute('data-lang-en');
+            }
+            if (element.hasAttribute('data-lang-placeholder-en')) {
+                element.placeholder = element.getAttribute('data-lang-placeholder-en');
+            }
+            if (element.hasAttribute('data-lang-aria-label-en')) {
+                element.setAttribute('aria-label', element.getAttribute('data-lang-aria-label-en'));
+            }
+            if (element.hasAttribute('data-lang-title-en')) {
+                element.title = element.getAttribute('data-lang-title-en');
+            }
+            if (element.hasAttribute('data-lang-alt-en')) {
+                element.alt = element.getAttribute('data-lang-alt-en');
+            }
+        }
+    });
+
+    // Update document title
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+        if (lang === 'id' && titleElement.hasAttribute('data-lang-id')) {
+            titleElement.textContent = titleElement.getAttribute('data-lang-id');
+        } else if (lang === 'en' && titleElement.hasAttribute('data-lang-en')) {
+            titleElement.textContent = titleElement.getAttribute('data-lang-en');
+        }
     }
 
+    // Update HTML lang attribute
     document.documentElement.lang = lang;
-    localStorage.setItem('language', lang);
-    if(languageSelect) languageSelect.value = lang;
 
-    document.querySelectorAll('[data-lang-key]').forEach(element => {
-        const key = element.getAttribute('data-lang-key');
-        if (translations[lang][key]) {
-            element.textContent = translations[lang][key]; // Always use textContent now
-        } else {
-            console.warn(`Translation key "${key}" not found for language "${lang}".`);
-        }
-    });
-
-    document.querySelectorAll('[data-lang-key-placeholder]').forEach(element => {
-        const key = element.getAttribute('data-lang-key-placeholder');
-        if (translations[lang][key]) {
-            element.placeholder = translations[lang][key];
-        } else {
-            console.warn(`Placeholder key "${key}" not found for language "${lang}".`);
-        }
-    });
-
-    document.querySelectorAll('[data-lang-key-alt]').forEach(element => {
-        const key = element.getAttribute('data-lang-key-alt');
-        if (translations[lang][key]) {
-            element.alt = translations[lang][key];
-        } else {
-            console.warn(`Alt text key "${key}" not found for language "${lang}".`);
-        }
-    });
-
-    document.querySelectorAll('[data-lang-key-aria-label]').forEach(element => {
-        const key = element.getAttribute('data-lang-key-aria-label');
-        if (translations[lang][key]) {
-            element.setAttribute('aria-label', translations[lang][key]);
-        } else {
-            console.warn(`Aria-label key "${key}" not found for language "${lang}".`);
-        }
-    });
-
-    // Special case for page title
-    if (translations[lang].pageTitle) {
-        document.title = translations[lang].pageTitle;
-    }
-
-    // Update aria-labels for new widgets
-    const whatsAppWidget = document.querySelector('.whatsapp-widget');
-    if (whatsAppWidget && translations[lang].widgetWhatsAppAriaLabel) {
-        whatsAppWidget.setAttribute('aria-label', translations[lang].widgetWhatsAppAriaLabel);
-    }
-
-    const telegramWidget = document.querySelector('.telegram-widget');
-    if (telegramWidget && translations[lang].widgetTelegramAriaLabel) {
-        telegramWidget.setAttribute('aria-label', translations[lang].widgetTelegramAriaLabel);
-    }
-
-    // Update nav links with data-lang-key if not already covered by general selector
-    // (The general selector should cover them if data-lang-key is applied correctly in HTML)
-    // Example for nav logo if it's a special case (it is covered if using data-lang-key)
-    const navLogoElement = document.querySelector('.nav-logo');
-    if (navLogoElement && translations[lang].navLogo) {
-        navLogoElement.textContent = translations[lang].navLogo; // Or use data-lang-key directly
-    }
-    const navHomeElement = document.querySelector('a[href="#hero"].nav-link');
-    if (navHomeElement && translations[lang].navHome) {
-        navHomeElement.textContent = translations[lang].navHome;
-    }
-    const navPortfolioElement = document.querySelector('a[href="#portfolio"].nav-link');
-    if (navPortfolioElement && translations[lang].navPortfolio) {
-        navPortfolioElement.textContent = translations[lang].navPortfolio;
-    }
-    const navAboutElement = document.querySelector('a[href="#about"].nav-link');
-    if (navAboutElement && translations[lang].navAbout) {
-        navAboutElement.textContent = translations[lang].navAbout;
-    }
-    // navContact is already handled by data-lang-key in the HTML edit
-
+    // Store the selected language in localStorage
+    localStorage.setItem('selectedLanguage', lang);
 }
 
-if (languageSelect) {
-    languageSelect.addEventListener('change', (event) => {
-        setLanguage(event.target.value);
-    });
-}
+// Initialize language from localStorage or default to 'id'
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'id';
+    setLanguage(savedLanguage);
+
+    // Set the language selector to match the current language
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+        languageSelect.value = savedLanguage;
+        // Add event listener for language selector
+        languageSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+    }
+});
 
 // New Flying Flyers Animation Functionality
 function initFlyingFlyersAnimation() {
@@ -1170,4 +1150,50 @@ function initAboutMeSlideshow() {
     }
 
     showImage(0); // Initialize the first image
-} 
+}
+
+// Slideshow functionality for About Me section
+document.addEventListener('DOMContentLoaded', function() {
+    const slideshowContainer = document.querySelector('.slideshow-container');
+    if (!slideshowContainer) return;
+
+    const images = slideshowContainer.querySelectorAll('.slideshow-image');
+    const prevButton = slideshowContainer.querySelector('.prev');
+    const nextButton = slideshowContainer.querySelector('.next');
+    let currentIndex = 0;
+
+    function showImage(index) {
+        images.forEach(img => img.classList.remove('active'));
+        images[index].classList.add('active');
+    }
+
+    function nextImage() {
+        currentIndex = (currentIndex + 1) % images.length;
+        showImage(currentIndex);
+    }
+
+    function prevImage() {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        showImage(currentIndex);
+    }
+
+    // Initialize first image
+    showImage(currentIndex);
+
+    // Add click event listeners
+    if (prevButton) prevButton.addEventListener('click', prevImage);
+    if (nextButton) nextButton.addEventListener('click', nextImage);
+
+    // Auto-advance slideshow every 5 seconds
+    let slideshowInterval = setInterval(nextImage, 5000);
+
+    // Pause slideshow on hover
+    slideshowContainer.addEventListener('mouseenter', () => {
+        clearInterval(slideshowInterval);
+    });
+
+    // Resume slideshow when mouse leaves
+    slideshowContainer.addEventListener('mouseleave', () => {
+        slideshowInterval = setInterval(nextImage, 5000);
+    });
+}); 

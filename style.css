@@ -3,19 +3,19 @@
     /* Dark Theme (Default) */
     --primary-color: #007FFF; /* Jeton Blue */
     --secondary-color: #1A1A1A; /* Jeton Dark Background */
-    --text-color: #E0E0E0; /* Light text for dark backgrounds */
-    --text-color-muted: #A0A0A0; /* Muted light text */
-    --text-color-headings: #FFFFFF; /* Brighter white for headings on dark */
+    --text-color: #EAEAEA; /* Brighter for better readability on dark */
+    --text-color-muted: #AAB8C2; /* Softer muted color */
+    --text-color-headings: #FFFFFF; /* Pure White for headings */
     --background-color: #0D0D0D; /* Jeton Very Dark Background */
-    --background-color-offset: #1A1A1A; /* Slightly lighter dark for elements like forms */
-    --border-color: rgba(255, 255, 255, 0.1); /* Light borders on dark backgrounds */
-    --shadow-color: rgba(0, 0, 0, 0.3); /* Stronger shadow for dark theme elements */
-    --header-bg: rgba(13, 13, 13, 0.85); /* Dark, slightly transparent */
-    --header-bg-scrolled: rgba(13, 13, 13, 0.95);
-    --header-border: rgba(255, 255, 255, 0.1);
-    --header-border-scrolled: rgba(255, 255, 255, 0.15);
-    --hamburger-bar-color: #E0E0E0;
-    --scroll-indicator-color: #999;
+    --background-color-offset: #1C1C1E; /* Slightly lighter dark for elements */
+    --border-color: rgba(255, 255, 255, 0.12); /* Slightly more visible border */
+    --shadow-color: rgba(0, 0, 0, 0.35); /* Stronger shadow for dark theme elements */
+    --header-bg: rgba(13, 13, 13, 0.88); /* Dark, slightly transparent */
+    --header-bg-scrolled: rgba(13, 13, 13, 0.96);
+    --header-border: rgba(255, 255, 255, 0.12);
+    --header-border-scrolled: rgba(255, 255, 255, 0.18);
+    --hamburger-bar-color: #EAEAEA;
+    --scroll-indicator-color: #AAB8C2;
 
     /* Neutral/Shared Variables */
     --font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -47,19 +47,19 @@ body.light-mode {
     /* Light Theme */
     --primary-color: #007FFF; /* Jeton Blue can stay same or be adjusted if needed */
     --secondary-color: #F4F6F8; /* Light gray background */
-    --text-color: #1D1D1F; /* Dark text for light backgrounds */
-    --text-color-muted: #555555; /* Muted dark text */
-    --text-color-headings: #000000; /* Black for headings on light */
+    --text-color: #212529; /* Darker text for better readability on light */
+    --text-color-muted: #6C757D; /* Standard muted color */
+    --text-color-headings: #000000; /* Pure Black for headings */
     --background-color: #FFFFFF; /* White background */
-    --background-color-offset: #F0F0F0; /* Light gray for elements like forms */
-    --border-color: rgba(0, 0, 0, 0.1); /* Dark borders on light backgrounds */
-    --shadow-color: rgba(0, 0, 0, 0.1); /* Softer shadow for light theme elements */
-    --header-bg: rgba(255, 255, 255, 0.85); /* Light, slightly transparent */
-    --header-bg-scrolled: rgba(255, 255, 255, 0.95);
-    --header-border: rgba(0, 0, 0, 0.1);
-    --header-border-scrolled: rgba(0, 0, 0, 0.15);
-    --hamburger-bar-color: #1D1D1F;
-    --scroll-indicator-color: #555;
+    --background-color-offset: #F8F9FA; /* Lighter gray for elements */
+    --border-color: rgba(0, 0, 0, 0.15); /* Slightly more visible border */
+    --shadow-color: rgba(0, 0, 0, 0.12); /* Softer shadow for light theme elements */
+    --header-bg: rgba(255, 255, 255, 0.88); /* Light, slightly transparent */
+    --header-bg-scrolled: rgba(255, 255, 255, 0.96);
+    --header-border: rgba(0, 0, 0, 0.15);
+    --header-border-scrolled: rgba(0, 0, 0, 0.18);
+    --hamburger-bar-color: #212529;
+    --scroll-indicator-color: #6C757D;
     --background-color-rgb: 255, 255, 255; /* Light background as RGB */
 }
 
@@ -102,13 +102,18 @@ main {
 h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     margin-bottom: 0.75em;
-    color: var(--text-color-headings); /* Default to light text */
+    color: var(--text-color-headings);
 }
 
 p {
     margin-bottom: 1.2em;
-    font-size: 1em; /* Base paragraph size */
-    color: var(--text-color-muted); /* Lighter gray for paragraphs on dark bg */
+    font-size: 1em;
+    color: var(--text-color); /* Changed from text-color-muted for better default readability */
+}
+
+/* If some paragraphs need to be muted, apply a specific class or use text-color-muted directly */
+.text-muted {
+    color: var(--text-color-muted);
 }
 
 a {
@@ -118,7 +123,11 @@ a {
 }
 
 a:hover {
-    color: #0059B3; /* Darker blue for hover - this can be a variable too if needed */
+    /* Adjust hover color if needed, could be a darker/lighter shade of primary or a specific variable */
+    filter: brightness(0.85);
+}
+body.light-mode a:hover {
+    filter: brightness(0.75);
 }
 
 img {
@@ -266,22 +275,20 @@ header.header-scrolled {
 
 .hero-slide-image {
     position: absolute;
-    /* top, left, animation-duration, animation-delay, and custom animation properties will be set by JS */
     width: auto;
-    max-width: 180px; /* Adjust as preferred */
-    max-height: 180px; /* Adjust as preferred */
+    max-width: 180px;
+    max-height: 180px;
     height: auto;
-    object-fit: contain; /* Shows the whole flyer */
-    opacity: 0.6; /* Start a bit transparent */
+    object-fit: contain;
+    opacity: 0.6;
     transition: opacity 0.3s ease-out, transform 0.3s ease-out, box-shadow 0.3s ease-out;
     animation-name: flyAround;
     animation-iteration-count: infinite;
-    animation-timing-function: ease-in-out; /* Smoother than linear for this type of motion */
-    pointer-events: auto; /* Allow hover/click on flyers */
+    animation-timing-function: ease-in-out;
+    pointer-events: auto;
     cursor: pointer;
-    border-radius: calc(var(--border-radius) / 2); /* Slightly less rounded for smaller items */
+    border-radius: calc(var(--border-radius) / 2);
     box-shadow: 0 4px 10px rgba(0,0,0,0.15);
-    /* Initial CSS variables, JS will override these per instance for variety */
     --current-rotate: 0deg;
     --current-scale: 0.6;
     --fly-x-25: 20px;
@@ -290,14 +297,14 @@ header.header-scrolled {
     --fly-y-50: 15px;
     --fly-x-75: 15px;
     --fly-y-75: -20px;
-    z-index: 0; /* Part of the deepest background with the slideshow container */
+    z-index: 0;
 }
 
 .hero-slide-image:hover {
     opacity: 1;
-    transform: scale(calc(var(--current-scale) + 0.2)) !important; /* Enlarge more, override animation transform */
+    transform: scale(calc(var(--current-scale) + 0.2)) !important;
     box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-    z-index: 2; /* Can come above overlay but below hero text when hovered */
+    z-index: 2;
 }
 
 .hero-overlay {
@@ -306,16 +313,16 @@ header.header-scrolled {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.4); /* Adjusted overlay for better gradient visibility */
-    z-index: 1; /* Above flying flyers, below hero text container */
+    background-color: rgba(0, 0, 0, 0.4);
+    z-index: 1;
 }
 
 .hero-section .container {
     position: relative;
-    z-index: 5; /* Higher z-index than flying flyers and overlay */
+    z-index: 5;
 }
 
-.hero-section h1 {
+.hero-section .container h1 {
     font-size: clamp(2.8em, 6vw, 5em);
     font-weight: 700;
     margin-bottom: 0.35em;
@@ -323,7 +330,7 @@ header.header-scrolled {
     line-height: 1.15;
 }
 
-.hero-section p {
+.hero-section .container p {
     font-size: clamp(1.05em, 2.8vw, 1.35em);
     margin-bottom: 2.2em;
     color: var(--text-color-muted);
@@ -333,10 +340,10 @@ header.header-scrolled {
     line-height: 1.75;
 }
 
-.cta-button {
+.hero-section .cta-button {
     display: inline-block;
     background-color: var(--primary-color);
-    color: #FFFFFF; /* Text on CTA is usually white */
+    color: #FFFFFF;
     padding: 15px 40px;
     border-radius: var(--border-radius);
     font-weight: 600;
@@ -346,14 +353,13 @@ header.header-scrolled {
     text-transform: none;
 }
 
-.cta-button:hover {
+.hero-section .cta-button:hover {
     background-color: #006AD4;
     color: #FFFFFF;
     transform: translateY(-4px) scale(1.04);
-    box-shadow: 0 9px 22px rgba(0, 127, 255, 0.35); /* Keep shadow related to primary color */
+    box-shadow: 0 9px 22px rgba(0, 127, 255, 0.35);
 }
 
-/* Add scroll indicator like Jeton */
 .scroll-indicator {
     position: absolute;
     bottom: 35px;
@@ -785,7 +791,32 @@ section {
     align-self: center;
     border: none;
     cursor: pointer;
-    margin-top: 10px;
+    margin-top: 20px; /* Increased margin-top */
+    padding: 15px 35px; /* Increased padding for a larger button */
+    font-size: 1.1em; /* Slightly larger font */
+    font-weight: 600;
+    background-color: var(--primary-color);
+    color: #FFFFFF; /* Ensure text is white */
+    border-radius: var(--border-radius);
+    transition: background-color var(--transition-speed), transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    box-shadow: 0 4px 15px rgba(var(--primary-color-rgb), 0.2);
+}
+
+.contact-form .cta-button:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 85%, black);
+    transform: translateY(-3px) scale(1.03);
+    box-shadow: 0 7px 20px rgba(var(--primary-color-rgb), 0.3);
+    color: #FFFFFF; /* Ensure text remains white on hover */
+}
+
+/* Specific adjustments for light mode if --primary-color is too light */
+body.light-mode .contact-form .cta-button {
+    /* If primary-color is very light, you might need a darker text or adjust hover */
+    /* color: #FFFFFF; /* Default should be fine for a blue primary */
+}
+
+body.light-mode .contact-form .cta-button:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 80%, black);
 }
 
 /* Direct Contact Buttons */
@@ -1000,10 +1031,10 @@ footer p {
         margin-left: 0; /* Reset individual margin if controls-container handles spacing */
     }
 
-    .hero-section h1 {
+    .hero-section .container h1 {
         font-size: clamp(2.2em, 7vw, 3.5em);
     }
-    .hero-section p {
+    .hero-section .container p {
         font-size: clamp(0.95em, 3.5vw, 1.15em);
     }
 
@@ -1037,10 +1068,10 @@ footer p {
         padding-top: 90px; 
         padding-bottom: 80px; /* Ensure scroll indicator is visible */
     }
-    .hero-section h1 {
+    .hero-section .container h1 {
         font-size: clamp(1.8em, 8vw, 2.5em);
     }
-    .hero-section p {
+    .hero-section .container p {
         font-size: clamp(0.9em, 4vw, 1em);
         padding-left: 10px;
         padding-right: 10px;
@@ -1085,20 +1116,20 @@ footer p {
     }
 }
 
-.hero-section h1,
-.hero-section p,
+.hero-section .container h1,
+.hero-section .container p,
 .hero-section .cta-button {
     animation-duration: 0.7s;
     animation-fill-mode: both;
     animation-timing-function: cubic-bezier(0.25, 0.8, 0.25, 1);
 }
 
-.hero-section h1 {
+.hero-section .container h1 {
     animation-name: fadeInUp;
     animation-delay: 0.15s;
 }
 
-.hero-section p {
+.hero-section .container p {
     animation-name: fadeInUp;
     animation-delay: 0.3s;
 }
@@ -2363,12 +2394,12 @@ body.light-mode .clients-section h2 {
     align-items: center;
     justify-content: center;
     transition: transform 0.3s ease;
-    width: 120px; 
-    height: 120px; 
-    background-color: transparent; /* Ensure no background on the item itself */
-    padding: 0;                   /* Ensure no padding on the item itself */
-    border-radius: 8px; 
-    position: relative; 
+    width: 160px; /* Increased size */
+    height: 120px; /* Adjusted height for better proportion with increased width */
+    background-color: transparent;
+    padding: 0;
+    border-radius: 8px;
+    position: relative;
 }
 
 .client-item:hover {
@@ -2376,15 +2407,15 @@ body.light-mode .clients-section h2 {
 }
 
 .client-logo {
-    max-width: 100%;    /* Reverted: General max width */
-    max-height: 80px;   /* Reverted: General max height */
+    max-width: 100%;
+    max-height: 90px; /* Increased size */
     display: block;
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15)); /* Default shadow for dark mode */
-    background: none; 
-    padding: 0; 
-    position: relative; 
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.15));
+    background: none;
+    padding: 0;
+    position: relative;
     z-index: 1;
-    transition: filter 0.3s ease; /* Add transition for smooth shadow change */
+    transition: filter 0.3s ease;
 }
 
 /* Light mode: more prominent shadow */
@@ -2410,10 +2441,14 @@ body:not(.light-mode) .client-item:nth-child(6) .client-logo {
 
 @media (max-width: 768px) {
     .clients-grid {
-        gap: 20px;
+        gap: 30px; /* Slightly increased gap for larger logos */
+    }
+    .client-item {
+        width: 140px;
+        height: 100px;
     }
     .client-logo {
-        max-height: 60px;
+        max-height: 75px; /* Adjusted for medium screens */
     }
     .clients-section h2 {
         font-size: 2rem;
@@ -2425,10 +2460,14 @@ body:not(.light-mode) .client-item:nth-child(6) .client-logo {
         padding: 40px 0;
     }
     .clients-grid {
-        gap: 15px;
+        gap: 20px;
+    }
+    .client-item {
+        width: 120px;
+        height: 90px;
     }
     .client-logo {
-        max-height: 50px;
+        max-height: 65px; /* Adjusted for small screens */
     }
     .clients-section h2 {
         font-size: 1.8rem;
@@ -2674,4 +2713,263 @@ body:not(.light-mode) .client-item:nth-child(6) .client-logo {
 }
 
 /* Make sure there are no lingering placeholders or invalid CSS beyond this point */
+
+/* --- REMOVE or OVERRIDE OLD DARK BACKGROUND --- */
+/* .about-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color-secondary) 100%);
+    position: relative;
+    overflow: hidden;
+} */
+
+/* --- PREMIUM BACKGROUND FOR ABOUT SECTION --- */
+.about-section {
+    padding: 100px 0;
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+body:not(.light-mode) .about-section {
+    background: linear-gradient(135deg, #23272a 0%, #1e2124 100%); /* Darker gradient for dark mode */
+}
+body.light-mode .about-section {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+}
+
+.about-content.premium-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: 60px;
+    align-items: start;
+    margin-top: 50px;
+    max-width: 1200px; /* Restored from previous adjustment */
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 20px; /* Restored from previous adjustment */
+}
+
+.premium-image-column {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+}
+
+.premium-media-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px; /* Restored from previous adjustment */
+    padding-top: 133.33%; /* 3:4 aspect ratio */
+    background: #fff;
+    border-radius: 24px;
+    box-shadow: 0 10px 45px 0 rgba(0,0,0,0.12), 0 2px 10px 0 rgba(0,0,0,0.08);
+    overflow: hidden;
+    border: 1px solid #e0e0e0;
+}
+
+.premium-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 18px;
+    box-sizing: border-box;
+}
+
+.slideshow-image {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.5s cubic-bezier(.4,1,.7,1);
+    border-radius: 14px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.07);
+}
+.slideshow-image.active {
+    opacity: 1;
+}
+
+.premium-controls {
+    position: absolute;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 18px;
+    z-index: 10;
+}
+.premium-nav-button {
+    background: linear-gradient(135deg, #007bff 60%, #7f53ac 100%);
+    border: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s cubic-bezier(.4,1,.7,1);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+.premium-nav-button:hover {
+    background: linear-gradient(135deg, #7f53ac 0%, #007bff 100%);
+    transform: scale(1.13);
+}
+.premium-nav-button i {
+    color: #fff;
+    font-size: 16px;
+}
+
+.premium-text-column {
+    padding: 30px 40px;
+    border-radius: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    /* Light/Dark specific styles */
+    background-color: var(--background-color-offset); /* Default to theme offset */
+    border: 1px solid var(--border-color);
+    box-shadow: 0 10px 45px 0 rgba(0,0,0,0.08), 0 2px 10px 0 rgba(0,0,0,0.05); /* Softer shadow */
+}
+body:not(.light-mode) .premium-text-column {
+    background-color: #2b2d31; /* Custom dark for card */
+    box-shadow: 0 10px 45px 0 rgba(0,0,0,0.15), 0 2px 10px 0 rgba(0,0,0,0.1);
+}
+body.light-mode .premium-text-column {
+    background-color: #ffffff;
+    box-shadow: 0 10px 45px 0 rgba(0,0,0,0.08), 0 2px 10px 0 rgba(0,0,0,0.05);
+}
+
+.premium-intro {
+    margin-top: 0;
+    margin-bottom: 25px;
+}
+.premium-paragraph {
+    font-family: var(--font-family); /* Unified font */
+    font-size: 1.1rem;
+    line-height: 1.75;
+    color: #232323;
+    margin-bottom: 20px;
+    text-align: left;
+    letter-spacing: 0.01em;
+}
+body.light-mode .premium-paragraph {
+    color: #232323;
+}
+
+.premium-expertise {
+    margin: 25px 0 0 0;
+}
+.premium-subtitle {
+    font-family: var(--font-family); /* Unified font */
+    font-size: 1.6rem;
+    color: #232323;
+    margin-bottom: 25px;
+    position: relative;
+    padding-bottom: 12px;
+    text-align: left;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+body.light-mode .premium-subtitle {
+    color: #232323;
+}
+.premium-subtitle::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #007bff, #7f53ac);
+    border-radius: 2px;
+}
+
+.premium-skills {
+    display: grid;
+    gap: 20px;
+}
+.premium-skill-item {
+    display: flex;
+    gap: 18px;
+    padding: 20px; /* Restored from previous adjustment */
+    background: #f8f9fa;
+    border-radius: 16px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.04);
+    align-items: flex-start;
+    border-left: 6px solid #7f53ac; /* Restored from previous adjustment */
+    transition: box-shadow 0.3s cubic-bezier(.4,1,.7,1);
+    /* Light/Dark specific styles */
+    background-color: var(--background-color); /* Default to main theme background */
+    box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+}
+body:not(.light-mode) .premium-skill-item {
+    background-color: #313338;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+}
+body.light-mode .premium-skill-item {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+}
+.premium-skill-item:hover {
+    box-shadow: 0 6px 18px rgba(127,83,172,0.18);
+}
+body:not(.light-mode) .premium-skill-item:hover {
+    box-shadow: 0 6px 18px rgba(127,83,172,0.25);
+}
+
+
+.premium-quote {
+    margin: 30px 0 0 0;
+    padding: 25px 35px;
+    border-left: 8px solid #007bff;
+    border-radius: 14px;
+    position: relative;
+    text-align: left;
+    /* Light/Dark specific styles */
+    background-color: var(--background-color); /* Default to main theme background */
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+}
+body:not(.light-mode) .premium-quote {
+    background-color: #313338;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+}
+body.light-mode .premium-quote {
+    background-color: #f6f7fb;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+/* ... (sisa CSS untuk About Me dan lainnya) ... */
+/* CSS untuk .premium-media-container dan .premium-nav-button tidak perlu diubah khusus light/dark karena sudah cukup kontras */
+
+.premium-paragraph, .premium-subtitle, .quote-text { /* .skill-content h4 removed from this group */
+    color: var(--text-color-headings);
+}
+body.light-mode .premium-paragraph,
+body.light-mode .premium-subtitle,
+body.light-mode .quote-text { /* .skill-content h4 removed from this group */
+    color: #232323;
+}
+
+/* Specific color rules for skill titles */
+.skill-content h4 {
+    font-family: var(--font-family);
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    margin-bottom: 8px;
+    color: var(--text-color); /* Dark Mode: Softer white for less emphasis than subtitle */
+}
+body.light-mode .skill-content h4 {
+    color: #232323; /* Light Mode: Dark grey, consistent with subtitle */
+}
+
+.skill-content p {
+    color: var(--text-color-muted);
+}
+body.light-mode .skill-content p {
+    color: #555;
+}
 
