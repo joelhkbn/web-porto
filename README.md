@@ -20,7 +20,7 @@ Ini adalah situs yang menampilkan karya desain yang saya buat, informasi tentang
 
 ## 📍 Teknologi yang Digunakan
 
-- HTML / CSS / JavaScript *(atau tambahkan framework/library yang kamu pakai)*
+- HTML / CSS / JavaScript
 - Responsive Design
 - Integrasi WhatsApp & Telegram
 
