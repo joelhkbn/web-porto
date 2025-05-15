@@ -1,4 +1,4 @@
-# 🌐 Web Portofolio — [Namamu]
+# 🌐 Web Portofolio — Joel Hukubun
 
 Selamat datang di repositori web portofolio saya!
 
