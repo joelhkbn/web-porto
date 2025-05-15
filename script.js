@@ -568,36 +568,36 @@ const translations = {
         portfolioTitle: "Flyer Gallery",
         clientsTitle: "Our Clients",
         clientsSubtitle: "Some organizations and companies that have trusted us with their design needs.",
-        flyer1Title: "Music Festival Flyer",
-        flyer1Desc: "Vibrant electronic music festival promotional design with dynamic visuals.",
-        flyer1Alt: "Electronic Music Festival Promotional Flyer",
-        flyer2Title: "Club Night Event",
-        flyer2Desc: "Weekend nightclub special event with DJ lineup and VIP offerings.",
-        flyer2Alt: "Nightclub Weekend Special Event Flyer",
-        flyer3Title: "Summer Beach Party",
-        flyer3Desc: "Tropical beach party design with sunset colors and vacation vibes.",
-        flyer3Alt: "Summer Beach Party Promotional Flyer",
-        flyer4Title: "DJ Performance Night",
-        flyer4Desc: "Special DJ performance announcement with modern geometric design.",
-        flyer4Alt: "DJ Special Performance Event Flyer",
-        flyer5Title: "Dance Club Opening",
-        flyer5Desc: "Grand opening announcement for new dance club with special guest DJs.",
-        flyer5Alt: "Dance Club Grand Opening Promotional Flyer",
-        flyer6Title: "Weekend Music Event",
-        flyer6Desc: "End of week music celebration featuring multiple artists and performances.",
-        flyer6Alt: "Weekend Music Celebration Event Flyer",
-        flyer7Title: "Neon Party Night",
-        flyer7Desc: "Futuristic neon-themed party with vibrant colors and light effects.",
-        flyer7Alt: "Neon Party Night Event Flyer",
-        flyer8Title: "Urban Music Festival",
-        flyer8Desc: "Hip-hop and urban music showcase featuring local and national artists.",
-        flyer8Alt: "Urban Music Festival Promotional Flyer",
-        flyer9Title: "Electronic Dance Night",
-        flyer9Desc: "EDM special event with light show and international guest DJs.",
-        flyer9Alt: "Electronic Dance Music Special Event Flyer",
-        flyer10Title: "Summer Club Series",
-        flyer10Desc: "Summer season club event series with weekly special performances.",
-        flyer10Alt: "Summer Club Series Event Flyer",
+        flyer1Title: "Official Event Celebration",
+        flyer1Desc: "Flyer for official government holiday celebration event.",
+        flyer1Alt: "Flyer for official government holiday celebration",
+        flyer2Title: "Official Event Celebration",
+        flyer2Desc: "Flyer for official government holiday celebration event.",
+        flyer2Alt: "Flyer for official government holiday celebration",
+        flyer3Title: "Government Institution Flyer",
+        flyer3Desc: "Custom designed flyer for government institution needs.",
+        flyer3Alt: "Flyer for government institution",
+        flyer4Title: "Government Institution Flyer",
+        flyer4Desc: "Custom designed flyer for government institution needs.",
+        flyer4Alt: "Flyer for government institution",
+        flyer5Title: "Private Event Flyer",
+        flyer5Desc: "Professionally designed flyer for private corporate events.",
+        flyer5Alt: "Flyer for private event",
+        flyer6Title: "Religious Event Flyer",
+        flyer6Desc: "Elegant flyer design for religious ceremonies and events.",
+        flyer6Alt: "Flyer for religious event",
+        flyer7Title: "Official Personal Flyer",
+        flyer7Desc: "Personalized flyer design for government official needs.",
+        flyer7Alt: "Personal flyer for government official",
+        flyer8Title: "Official Personal Flyer",
+        flyer8Desc: "Personalized flyer design for government official needs.",
+        flyer8Alt: "Personal flyer for government official",
+        flyer9Title: "Institution Flyer",
+        flyer9Desc: "Professional flyer design for institutional events and announcements.",
+        flyer9Alt: "Flyer for institution",
+        flyer10Title: "Institution Flyer",
+        flyer10Desc: "Professional flyer design for institutional events and announcements.",
+        flyer10Alt: "Flyer for institution",
         aboutTitle: "About Me",
         aboutParagraph: "As a graphic designer from Bitung, Indonesia, I focus on creating flyers that are not only visually appealing but also informative, supporting effective communication for your needs.",
         aboutParagraph2: "I have over 5 years of experience as a graphic designer specializing in promotional design and marketing materials. With a formal education background in Visual Communication Design, I have developed a modern and eye-catching design style to ensure your flyers get the attention they deserve.",
@@ -641,36 +641,36 @@ const translations = {
         portfolioTitle: "Galeri Flyer",
         clientsTitle: "Klien Kami",
         clientsSubtitle: "Beberapa instansi dan perusahaan yang telah mempercayakan kebutuhan desain mereka pada kami.",
-        flyer1Title: "Flyer Festival Musik",
-        flyer1Desc: "Desain promosi festival musik elektronik yang dinamis dengan visual menarik.",
-        flyer1Alt: "Flyer Promosi Festival Musik Elektronik",
-        flyer2Title: "Acara Malam Klub",
-        flyer2Desc: "Event spesial akhir pekan di klub malam dengan lineup DJ dan penawaran VIP.",
-        flyer2Alt: "Flyer Event Spesial Akhir Pekan Klub Malam",
-        flyer3Title: "Pesta Pantai Musim Panas",
-        flyer3Desc: "Desain pesta pantai tropis dengan warna sunset dan nuansa liburan.",
-        flyer3Alt: "Flyer Promosi Pesta Pantai Musim Panas",
-        flyer4Title: "Malam Pertunjukan DJ",
-        flyer4Desc: "Pengumuman pertunjukan spesial DJ dengan desain geometris modern.",
-        flyer4Alt: "Flyer Event Pertunjukan Spesial DJ",
-        flyer5Title: "Pembukaan Klub Dansa",
-        flyer5Desc: "Pengumuman grand opening untuk klub dansa baru dengan DJ tamu spesial.",
-        flyer5Alt: "Flyer Promosi Grand Opening Klub Dansa",
-        flyer6Title: "Event Musik Akhir Pekan",
-        flyer6Desc: "Perayaan musik akhir pekan yang menampilkan berbagai artis dan pertunjukan.",
-        flyer6Alt: "Flyer Event Perayaan Musik Akhir Pekan",
-        flyer7Title: "Pesta Malam Neon",
-        flyer7Desc: "Pesta bertema neon futuristik dengan warna-warna mencolok dan efek cahaya.",
-        flyer7Alt: "Flyer Event Pesta Malam Neon",
-        flyer8Title: "Festival Musik Urban",
-        flyer8Desc: "Showcase musik hip-hop dan urban yang menampilkan artis lokal dan nasional.",
-        flyer8Alt: "Flyer Promosi Festival Musik Urban",
-        flyer9Title: "Malam Dansa Elektronik",
-        flyer9Desc: "Event spesial EDM dengan pertunjukan lampu dan DJ tamu internasional.",
-        flyer9Alt: "Flyer Event Spesial Musik Dansa Elektronik",
-        flyer10Title: "Seri Klub Musim Panas",
-        flyer10Desc: "Rangkaian event klub musim panas dengan pertunjukan spesial mingguan.",
-        flyer10Alt: "Flyer Event Seri Klub Musim Panas",
+        flyer1Title: "Perayaan Hari Besar Pejabat",
+        flyer1Desc: "Flyer perayaan hari besar untuk pejabat.",
+        flyer1Alt: "Flyer perayaan hari besar untuk pejabat",
+        flyer2Title: "Perayaan Hari Besar Pejabat",
+        flyer2Desc: "Flyer perayaan hari besar untuk pejabat.",
+        flyer2Alt: "Flyer perayaan hari besar untuk pejabat",
+        flyer3Title: "Flyer Instansi Pemerintah",
+        flyer3Desc: "Untuk instansi pemerintah.",
+        flyer3Alt: "Flyer untuk instansi pemerintah",
+        flyer4Title: "Flyer Instansi Pemerintah",
+        flyer4Desc: "Untuk instansi pemerintah.",
+        flyer4Alt: "Flyer untuk instansi pemerintah",
+        flyer5Title: "Flyer Event Swasta",
+        flyer5Desc: "Untuk event swasta.",
+        flyer5Alt: "Flyer untuk event swasta",
+        flyer6Title: "Flyer Acara Kerohanian",
+        flyer6Desc: "Acara kerohanian.",
+        flyer6Alt: "Flyer acara kerohanian",
+        flyer7Title: "Flyer Personal Pejabat",
+        flyer7Desc: "Flyer personal pejabat.",
+        flyer7Alt: "Flyer personal pejabat",
+        flyer8Title: "Flyer Personal Pejabat",
+        flyer8Desc: "Flyer personal pejabat.",
+        flyer8Alt: "Flyer personal pejabat",
+        flyer9Title: "Flyer Instansi",
+        flyer9Desc: "Untuk flyer instansi.",
+        flyer9Alt: "Flyer untuk instansi",
+        flyer10Title: "Flyer Instansi",
+        flyer10Desc: "Untuk flyer instansi.",
+        flyer10Alt: "Flyer untuk instansi",
         aboutTitle: "Tentang Saya",
         aboutParagraph: "Sebagai desainer grafis dari Bitung, Indonesia, saya berfokus pada layanan pembuatan flyer yang tidak hanya menarik secara visual tetapi juga informatif, mendukung komunikasi efektif untuk kebutuhan Anda.",
         aboutParagraph2: "Saya memiliki pengalaman lebih dari 5 tahun sebagai graphic designer dengan spesialisasi di desain promosi dan marketing material. Dengan latar belakang pendidikan formal di bidang Desain Komunikasi Visual, saya telah mengembangkan gaya desain yang modern dan eye-catching untuk memastikan flyer Anda mendapatkan perhatian yang diinginkan.",
@@ -1084,37 +1084,25 @@ function loadClientLogos() {
     
     if (!clientsGrid) return;
     
-    // Clear the grid first
     clientsGrid.innerHTML = '';
     
-    // Number of client logos available (currently 6)
     const logoCount = 6;
     console.log(`Will load ${logoCount} client logos`);
     
-    // Create client logo elements
     for (let i = 1; i <= logoCount; i++) {
         const clientItem = document.createElement('div');
         clientItem.className = 'client-item';
-        clientItem.style.backgroundColor = '#ffffff';
-        clientItem.style.padding = '20px';
-        clientItem.style.boxShadow = '0 10px 30px rgba(0,0,0,0.3)';
-        clientItem.style.border = 'none';
-        clientItem.style.zIndex = '10';
-        clientItem.style.position = 'relative';
+        
+        // JavaScript styling for clientItem is minimized as CSS handles most of it.
+        // Specific background/border-radius for items 2 & 6 are handled by CSS.
         
         const clientImg = document.createElement('img');
         clientImg.src = `images/client/${i}.png`;
         clientImg.alt = `Client Logo ${i}`;
         clientImg.className = 'client-logo';
-        clientImg.style.display = 'block';
-        clientImg.style.maxWidth = '100%';
-        clientImg.style.height = 'auto';
-        clientImg.style.zIndex = '20';
-        clientImg.style.position = 'relative';
         
         clientItem.appendChild(clientImg);
         clientsGrid.appendChild(clientItem);
-        console.log(`Added client logo ${i}`);
     }
     
     console.log("Client logos loading complete");
