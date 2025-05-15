@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio Saya - Flyer Designer</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Background Gradient Elements -->
+    <div class="bg-gradient-wrapper"></div>
+    <div class="bg-gradient-fade"></div>
+    
+    <!-- Back to Top Rocket Button -->
+    <div class="back-to-top" aria-label="Back to top" title="Kembali ke atas">
+        <div class="rocket-wrapper">
+            <i class="fas fa-rocket"></i>
+            <div class="rocket-flame">
+                <span class="flame-1"></span>
+                <span class="flame-2"></span>
+                <span class="flame-3"></span>
+            </div>
+        </div>
+    </div>
+    
+    <header>
+        <nav class="navbar">
+            <div class="container">
+                <a href="#" class="nav-logo">Portfolio</a>
+                <ul class="nav-menu">
+                    <li class="nav-item"><a href="#hero" class="nav-link">Beranda</a></li>
+                    <li class="nav-item"><a href="#portfolio" class="nav-link">Portfolio</a></li>
+                    <li class="nav-item"><a href="#clients" class="nav-link" data-lang-key="navClients">Klien</a></li>
+                    <li class="nav-item"><a href="#about" class="nav-link">Tentang Saya</a></li>
+                    <li class="nav-item"><a href="#contact" class="nav-link" data-lang-key="navContact">Kontak</a></li>
+                </ul>
+                <div class="controls-container">
+                    <div class="theme-switch-container">
+                        <input type="checkbox" id="theme-toggle-checkbox">
+                        <label for="theme-toggle-checkbox" class="theme-toggle-label">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="sun-icon" width="20px" height="20px"><path d="M12 7c-2.76 0-5 2.24-5 5s2.24 5 5 5 5-2.24 5-5-2.24-5-5-5zM12 9c1.65 0 3 1.35 3 3s-1.35 3-3 3-3-1.35-3-3 1.35-3 3-3zm0-7v4h-1V2zm0 18v4h-1v-4zM4.93 4.93l2.83 2.83-0.71 0.71L4.22 5.64zm12.02 12.02l2.83 2.83-0.71 0.71-2.83-2.83zM4 11H0v1h4zm18 0h-4v1h4zM6.93 19.07l2.83-2.83 0.71 0.71-2.83 2.83zm12.02-12.02l2.83-2.83 0.71 0.71-2.83 2.83z"></path></svg>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="moon-icon" width="20px" height="20px"><path d="M12 3c-4.97 0-9 4.03-9 9s4.03 9 9 9c.83 0 1.5-.67 1.5-1.5 0-.39-.15-.74-.39-1.01-.23-.26-.38-.61-.38-.99 0-.83.67-1.5 1.5-1.5H16c3.31 0 6-2.69 6-6 0-4.97-4.03-9-9-9zm-1 14.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"></path></svg>
+                        </label>
+                    </div>
+                    <div class="language-switcher">
+                        <select id="language-select">
+                            <option value="id">ID</option>
+                            <option value="en">EN</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="hamburger">
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                    <span class="bar"></span>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="hero" class="hero-section">
+            <div class="hero-background-slideshow">
+                <img src="images/flyer_contoh_1.png" alt="Electronic Music Festival Promotional Flyer" class="hero-slide-image active">
+                <img src="images/flyer_contoh_2.png" alt="Nightclub Weekend Special Event Flyer" class="hero-slide-image">
+                <img src="images/flyer_contoh_3.png" alt="Summer Beach Party Promotional Flyer" class="hero-slide-image">
+                <img src="images/flyer_contoh_7.jpg" alt="Neon Party Night Event Flyer" class="hero-slide-image">
+                <img src="images/flyer_contoh_8.jpg" alt="Urban Music Festival Promotional Flyer" class="hero-slide-image">
+                <img src="images/flyer_contoh_9.jpg" alt="Electronic Dance Music Special Event Flyer" class="hero-slide-image">
+                <img src="images/flyer_contoh_10.jpg" alt="Summer Club Series Event Flyer" class="hero-slide-image">
+                <img src="images/flyer_contoh_6.png" alt="Weekend Music Celebration Event Flyer" class="hero-slide-image">
+            </div>
+            <div class="hero-overlay"></div>
+            <div class="container">
+                <h1 data-lang-key="heroTitle">Jasa Desain Flyer Kreatif di Bitung</h1>
+                <p data-lang-key="heroSubtitle">Membantu Anda menyampaikan pesan melalui desain flyer yang menarik dan efektif.</p>
+                <a href="#portfolio" class="cta-button" data-lang-key="heroCTA">Lihat Portfolio Desain</a>
+            </div>
+            <div class="scroll-indicator">
+                <span data-lang-key="scrollIndicator">Scroll</span>
+                <div class="arrow"></div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="portfolio-section">
+            <div class="container">
+                <h2 class="animate-on-scroll" data-lang-key="portfolioTitle">Galeri Flyer</h2>
+                <div class="flyer-aesthetic-grid">
+                    <!-- Flyer 1 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_1.png" alt="Electronic Music Festival Promotional Flyer" data-lang-key-alt="flyer1Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer1Title">Flyer Festival Musik</h3>
+                            <p data-lang-key="flyer1Desc">Desain promosi festival musik elektronik yang dinamis dengan visual menarik.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 2 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_2.png" alt="Nightclub Weekend Special Event Flyer" data-lang-key-alt="flyer2Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer2Title">Acara Malam Klub</h3>
+                            <p data-lang-key="flyer2Desc">Event spesial akhir pekan di klub malam dengan lineup DJ dan penawaran VIP.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 3 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_3.png" alt="Summer Beach Party Promotional Flyer" data-lang-key-alt="flyer3Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer3Title">Pesta Pantai Musim Panas</h3>
+                            <p data-lang-key="flyer3Desc">Desain pesta pantai tropis dengan warna sunset dan nuansa liburan.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 4 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_4.png" alt="DJ Special Performance Event Flyer" data-lang-key-alt="flyer4Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer4Title">Malam Pertunjukan DJ</h3>
+                            <p data-lang-key="flyer4Desc">Pengumuman pertunjukan spesial DJ dengan desain geometris modern.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 5 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_5.png" alt="Dance Club Grand Opening Promotional Flyer" data-lang-key-alt="flyer5Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer5Title">Pembukaan Klub Dansa</h3>
+                            <p data-lang-key="flyer5Desc">Pengumuman grand opening untuk klub dansa baru dengan DJ tamu spesial.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 6 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_6.png" alt="Weekend Music Celebration Event Flyer" data-lang-key-alt="flyer6Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer6Title">Event Musik Akhir Pekan</h3>
+                            <p data-lang-key="flyer6Desc">Perayaan musik akhir pekan yang menampilkan berbagai artis dan pertunjukan.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 7 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_7.jpg" alt="Neon Party Night Event Flyer" data-lang-key-alt="flyer7Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer7Title">Pesta Malam Neon</h3>
+                            <p data-lang-key="flyer7Desc">Pesta bertema neon futuristik dengan warna-warna mencolok dan efek cahaya.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 8 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_8.jpg" alt="Urban Music Festival Promotional Flyer" data-lang-key-alt="flyer8Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer8Title">Festival Musik Urban</h3>
+                            <p data-lang-key="flyer8Desc">Showcase musik hip-hop dan urban yang menampilkan artis lokal dan nasional.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 9 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_9.jpg" alt="Electronic Dance Music Special Event Flyer" data-lang-key-alt="flyer9Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer9Title">Malam Dansa Elektronik</h3>
+                            <p data-lang-key="flyer9Desc">Event spesial EDM dengan pertunjukan lampu dan DJ tamu internasional.</p>
+                        </div>
+                    </div>
+                    <!-- Flyer 10 -->
+                    <div class="flyer-grid-item animate-on-scroll">
+                        <div class="flyer-image-container">
+                            <img src="images/flyer_contoh_10.jpg" alt="Summer Club Series Event Flyer" data-lang-key-alt="flyer10Alt">
+                        </div>
+                        <div class="flyer-caption">
+                            <h3 data-lang-key="flyer10Title">Seri Klub Musim Panas</h3>
+                            <p data-lang-key="flyer10Desc">Rangkaian event klub musim panas dengan pertunjukan spesial mingguan.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Client Section -->
+        <section id="clients" class="clients-section">
+            <div class="container">
+                <h2>In Partnership with</h2>
+                
+                <div class="clients-grid">
+                    <div class="client-item">
+                        <img src="images/client/pearson.png" alt="Pearson Edexcel" class="client-logo">
+                    </div>
+                    <div class="client-item">
+                        <img src="images/client/berwick.png" alt="Berwick Secondary College" class="client-logo">
+                    </div>
+                    <div class="client-item">
+                        <img src="images/client/microsoft.png" alt="Microsoft" class="client-logo">
+                    </div>
+                    <div class="client-item">
+                        <img src="images/client/hanban.png" alt="Confucius Institute" class="client-logo">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="about-section">
+            <div class="container">
+                <h2 class="animate-on-scroll" data-lang-key="aboutTitle">Tentang Saya</h2>
+                <div class="about-content">
+                    <div class="about-photos animate-on-scroll">
+                        <div class="about-photo-grid">
+                            <img src="images/tentangsaya_1.jpg" alt="Foto Profil 1" class="about-photo">
+                            <img src="images/tentangsaya_2.jpg" alt="Foto Profil 2" class="about-photo">
+                            <img src="images/tentangsaya_3.jpg" alt="Foto Profil 3" class="about-photo">
+                            <img src="images/tentangsaya_4.jpg" alt="Foto Profil 4" class="about-photo">
+                        </div>
+                    </div>
+                    <div class="about-text">
+                        <p class="animate-on-scroll" data-lang-key="aboutParagraph">Sebagai desainer grafis dari Bitung, Indonesia, saya berfokus pada layanan pembuatan flyer yang tidak hanya menarik secara visual tetapi juga informatif, mendukung komunikasi efektif untuk kebutuhan Anda.</p>
+                        
+                        <p class="animate-on-scroll" data-lang-key="aboutParagraph2">Saya memiliki pengalaman lebih dari 5 tahun sebagai graphic designer dengan spesialisasi di desain promosi dan marketing material. Dengan latar belakang pendidikan formal di bidang Desain Komunikasi Visual, saya telah mengembangkan gaya desain yang modern dan eye-catching untuk memastikan flyer Anda mendapatkan perhatian yang diinginkan.</p>
+                        
+                        <p class="animate-on-scroll" data-lang-key="aboutParagraph3">Selain desain flyer, saya juga memiliki kemampuan dalam fotografi yang membantu saya memahami komposisi visual dan penggunaan warna yang efektif. Pendekatan saya dalam desain selalu customer-oriented, memastikan hasil akhir sesuai dengan visi dan kebutuhan spesifik brand Anda.</p>
+                        
+                        <div class="skills animate-on-scroll">
+                            <h3 data-lang-key="skillsTitle">Keahlian:</h3>
+                            <ul>
+                                <li data-lang-key="skill1">Desain Flyer Promosi</li>
+                                <li data-lang-key="skill2">Desain Digital Marketing</li>
+                                <li data-lang-key="skill3">Branding & Visual Identity</li>
+                                <li data-lang-key="skill4">Desktop Publishing</li>
+                                <li data-lang-key="skill5">Adobe Creative Suite</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="container">
+                <h2 class="animate-on-scroll" data-lang-key="contactTitle">Hubungi Saya</h2>
+                <p class="animate-on-scroll" data-lang-key="contactIntro">Siap membantu mewujudkan ide flyer untuk bisnis Anda. Hubungi saya untuk diskusi lebih lanjut!</p>
+                <form action="mailto:emailanda@example.com" method="POST" enctype="text/plain" class="contact-form animate-on-scroll">
+                    <input type="text" name="name" placeholder="Nama Anda" required data-lang-key-placeholder="formNamePlaceholder">
+                    <input type="email" name="email_pengirim" placeholder="Email Anda (untuk balasan)" required data-lang-key-placeholder="formEmailPlaceholder">
+                    <input type="text" name="subject" placeholder="Subjek Pesan" required data-lang-key-placeholder="formSubjectPlaceholder">
+                    <textarea name="body" placeholder="Pesan Anda" rows="5" required data-lang-key-placeholder="formMessagePlaceholder"></textarea>
+                    <button type="submit" class="cta-button" data-lang-key="formSubmitButton">Kirim Pesan via Email</button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <!-- Image Preview Modal -->
+    <div id="imagePreviewModal" class="image-modal">
+        <span class="modal-close-button">&times;</span>
+        <button class="modal-nav-button prev" aria-label="Previous Image" data-lang-key-aria-label="modalPreviousAriaLabel">&#10094;</button>
+        <img class="modal-content-image" id="modalImageContent">
+        <button class="modal-nav-button next" aria-label="Next Image" data-lang-key-aria-label="modalNextAriaLabel">&#10095;</button>
+        <div id="modalCaption" class="modal-caption-text"></div>
+    </div>
+
+    <!-- Floating Contact Widgets -->
+    <div class="floating-widgets">
+        <a href="https://wa.me/6287730569181" class="widget-link whatsapp-widget" target="_blank" aria-label="Hubungi via WhatsApp">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+            <span class="widget-tooltip" data-lang-key="widgetWhatsAppTooltip">Chat via WhatsApp</span>
+        </a>
+        <a href="https://t.me/jojopunyaini" class="widget-link telegram-widget" target="_blank" aria-label="Hubungi via Telegram">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+            <span class="widget-tooltip" data-lang-key="widgetTelegramTooltip">Chat via Telegram</span>
+        </a>
+    </div>
+    
+    <!-- Custom Right-Click Context Menu -->
+    <div id="custom-context-menu" class="custom-context-menu">
+        <div class="context-menu-header" data-lang-key="contextMenuHeader">Hubungi Via:</div>
+        <a href="https://wa.me/6287730569181" class="context-menu-item whatsapp-item" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp">
+            <span data-lang-key="contextMenuWhatsApp">WhatsApp</span>
+        </a>
+        <a href="https://t.me/jojopunyaini" class="context-menu-item telegram-item" target="_blank">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg" alt="Telegram">
+            <span data-lang-key="contextMenuTelegram">Telegram</span>
+        </a>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html> 
