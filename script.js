@@ -433,6 +433,9 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize client logos
     loadClientLogos();
     
+    // Initialize About Me Slideshow
+    initAboutMeSlideshow();
+    
     console.log("Normal scrolling enabled for better content visibility");
 });
 
@@ -624,7 +627,11 @@ const translations = {
         widgetTelegramTooltip: "Chat on Telegram",
         contextMenuHeader: "Contact via:",
         contextMenuWhatsApp: "WhatsApp",
-        contextMenuTelegram: "Telegram"
+        contextMenuTelegram: "Telegram",
+        aboutPhoto1Alt: "About Me - Photo 1",
+        aboutPhoto2Alt: "About Me - Photo 2",
+        aboutPhoto3Alt: "About Me - Photo 3",
+        aboutPhoto4Alt: "About Me - Photo 4"
     },
     id: {
         pageTitle: "Portfolio Saya - Desainer Flyer",
@@ -697,7 +704,11 @@ const translations = {
         widgetTelegramTooltip: "Chat di Telegram",
         contextMenuHeader: "Hubungi Via:",
         contextMenuWhatsApp: "WhatsApp",
-        contextMenuTelegram: "Telegram"
+        contextMenuTelegram: "Telegram",
+        aboutPhoto1Alt: "Tentang Saya - Foto 1",
+        aboutPhoto2Alt: "Tentang Saya - Foto 2",
+        aboutPhoto3Alt: "Tentang Saya - Foto 3",
+        aboutPhoto4Alt: "Tentang Saya - Foto 4"
     }
 };
 
@@ -705,7 +716,7 @@ const languageSelect = document.getElementById('language-select');
 
 function setLanguage(lang) {
     if (!translations[lang]) {
-        console.warn(`Language "${lang}" not found in translations. Defaulting to 'id'.`);
+        console.warn(`Language "${lang}" not found in translations. Defaulting to \'id\'.`);
         lang = 'id';
     }
 
@@ -716,7 +727,7 @@ function setLanguage(lang) {
     document.querySelectorAll('[data-lang-key]').forEach(element => {
         const key = element.getAttribute('data-lang-key');
         if (translations[lang][key]) {
-            element.textContent = translations[lang][key];
+            element.textContent = translations[lang][key]; // Always use textContent now
         } else {
             console.warn(`Translation key "${key}" not found for language "${lang}".`);
         }
@@ -1106,4 +1117,57 @@ function loadClientLogos() {
     }
     
     console.log("Client logos loading complete");
+}
+
+// About Me Slideshow Functionality
+function initAboutMeSlideshow() {
+    const slideshowContainer = document.querySelector('.testimonial-image-column .slideshow-container');
+    if (!slideshowContainer) return;
+
+    const images = slideshowContainer.querySelectorAll('.slideshow-image');
+    const prevButton = slideshowContainer.querySelector('.slideshow-nav-button.prev');
+    const nextButton = slideshowContainer.querySelector('.slideshow-nav-button.next');
+    let currentImageIndex = 0;
+
+    if (images.length <= 1) {
+        if(prevButton) prevButton.style.display = 'none';
+        if(nextButton) nextButton.style.display = 'none';
+        return; // No slideshow needed for 1 or 0 images
+    }
+
+    function showImage(index) {
+        images.forEach((img, i) => {
+            img.classList.remove('active');
+            // Make all non-active images position:absolute to stack correctly for fade
+            if (i !== index) {
+                img.style.position = 'absolute'; 
+            }
+        });
+        images[index].classList.add('active');
+        // The active image uses position:relative (from CSS) to define container height
+        images[index].style.position = 'relative'; 
+        currentImageIndex = index;
+    }
+
+    if (prevButton) {
+        prevButton.addEventListener('click', () => {
+            let newIndex = currentImageIndex - 1;
+            if (newIndex < 0) {
+                newIndex = images.length - 1;
+            }
+            showImage(newIndex);
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', () => {
+            let newIndex = currentImageIndex + 1;
+            if (newIndex >= images.length) {
+                newIndex = 0;
+            }
+            showImage(newIndex);
+        });
+    }
+
+    showImage(0); // Initialize the first image
 } 

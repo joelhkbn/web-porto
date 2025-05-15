@@ -2434,3 +2434,244 @@ body:not(.light-mode) .client-item:nth-child(6) .client-logo {
         font-size: 1.8rem;
     }
 }
+
+/* About Section & Contact Section (Will adapt to theme) */
+
+/* OLD About Me section styles - COMMENTED OUT */
+/*
+.about-section h2, .contact-section h2 { ... }
+.about-section .container, .contact-section .container { ... }
+.about-section p, .contact-section p { ... }
+.about-photos { ... }
+.about-photo-grid { ... }
+.about-photo { ... }
+.about-photo:hover { ... }
+.about-text { ... }
+.about-text p { ... }
+.skills { ... }
+.skills h3 { ... }
+.skills ul { ... }
+.skills li { ... }
+.skills li::before { ... }
+@media (min-width: 768px) {
+    .about-content:not(.testimonial-layout) { 
+        flex-direction: row;
+        align-items: flex-start;
+    }
+    .about-photos { width: 40%; }
+    .about-text { width: 60%; padding-left: 2rem; }
+}
+@media (max-width: 767px) {
+    .about-photo-grid { max-width: 400px; }
+    .about-text { margin-top: 1rem; }
+}
+@media (max-width: 480px) {
+    .about-photo-grid { grid-template-columns: 1fr; max-width: 300px; }
+    .about-photo { height: 220px; }
+}
+*/
+
+/* NEW Testimonial Layout for About Section */
+.testimonial-layout {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    align-items: center;
+    gap: 2rem; /* Spacing between columns */
+    padding: 2rem 0; /* Add some padding to the section content */
+}
+
+.testimonial-image-column {
+    flex: 1 1 40%; /* Takes up 40% of the space, can shrink/grow */
+    min-width: 300px; /* Minimum width before wrapping */
+}
+
+.testimonial-media-container {
+    position: relative;
+    border-radius: 12px; /* Rounded corners for the media container */
+    overflow: hidden;
+    box-shadow: 0 10px 25px rgba(var(--shadow-color), 0.15);
+}
+
+.testimonial-media-container img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 4.5; /* Maintain aspect ratio similar to example */
+    object-fit: cover;
+    /* Removed position:absolute from here if it existed, slideshow images will handle it */
+}
+
+/* Styles for the new About Me slideshow */
+.slideshow-container {
+    position: relative; /* Already on .testimonial-media-container */
+    overflow: hidden; /* Already on .testimonial-media-container */
+}
+
+.slideshow-image {
+    position: absolute; /* All images stacked */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%; /* Ensure they fill the container defined by aspect-ratio on parent */
+    object-fit: cover;
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out; /* Fade effect */
+    border-radius: 12px; /* Match container rounding */
+}
+
+.slideshow-image.active {
+    opacity: 1;
+    position: relative; /* For the first active image to set the container height correctly */
+}
+
+.slideshow-nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    transition: background-color 0.3s ease;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+}
+
+.slideshow-nav-button:hover {
+    background-color: rgba(var(--primary-color-rgb), 0.7);
+}
+
+.slideshow-nav-button.prev {
+    left: 15px;
+}
+
+.slideshow-nav-button.next {
+    right: 15px;
+}
+
+.testimonial-text-column {
+    flex: 1 1 55%; /* Takes up 55% of the space */
+    min-width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem; /* Spacing between text elements */
+    text-align: left; /* Ensure text is left-aligned by default */
+}
+
+/* Styles for paragraphs within the new text column */
+.testimonial-text-column p {
+    font-size: 1em; /* Or your preferred paragraph font size */
+    line-height: 1.7;
+    color: var(--text-color-muted);
+    margin-bottom: 0.5rem; /* Adjust spacing between paragraphs if needed */
+}
+
+.testimonial-text-column p.animate-on-scroll:last-of-type {
+    margin-bottom: 1.5rem; /* More space before skills */
+}
+
+/* Styles for the .skills div within the new text column */
+.testimonial-text-column .skills {
+    margin-top: 1rem; /* Adjust as needed */
+    background: rgba(var(--primary-color-rgb), 0.05); /* Lighter background */
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    border-left: 4px solid var(--primary-color);
+}
+
+.testimonial-text-column .skills h3 {
+    color: var(--text-color-headings);
+    margin-bottom: 1rem;
+    font-size: 1.2rem;
+}
+
+.testimonial-text-column .skills ul {
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem; /* Adjust gap */
+    padding-left: 0;
+}
+
+.testimonial-text-column .skills li {
+    position: relative;
+    padding-left: 1.5rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+    color: var(--text-color);
+}
+
+.testimonial-text-column .skills li::before {
+    content: "✓";
+    position: absolute;
+    left: 0;
+    color: var(--primary-color);
+    font-weight: bold;
+}
+
+
+/* Remove or comment out unused testimonial-specific styles */
+/*
+.quote-icon-container { ... }
+.testimonial-quote { ... }
+.testimonial-quote .highlight { ... }
+.testimonial-link { ... }
+.testimonial-link:hover { ... }
+.testimonial-separator { ... }
+.testimonial-author .author-name { ... }
+.testimonial-author .author-website { ... }
+.testimonial-navigation { ... }
+.testimonial-navigation .nav-arrow { ... }
+.testimonial-navigation .nav-arrow:hover { ... }
+*/
+
+/* OLD About Me section styles - ALREADY COMMENTED OUT */
+/*
+.about-photos { ... }
+...*/
+
+/* Responsive adjustments for the new testimonial layout */
+@media (max-width: 768px) {
+    .testimonial-layout {
+        flex-direction: column;
+        align-items: stretch; /* Stretch columns to full width */
+    }
+
+    .testimonial-image-column,
+    .testimonial-text-column {
+        flex-basis: auto; /* Reset flex-basis */
+        width: 100%;
+    }
+
+    .testimonial-text-column {
+        /* text-align: center; /* Reverted: Keep text-align left for paragraphs */
+    }
+    /* Paragraphs and skills list will naturally be left-aligned now based on .testimonial-text-column */
+
+    /* .testimonial-link, /* Element removed */
+    /* .testimonial-navigation { /* Element removed */
+    /*    align-self: center; 
+    /* }
+    /* .testimonial-navigation {
+    /*     justify-content: center; 
+    /* } */
+    /* .testimonial-quote { /* Element removed */
+    /*    font-size: clamp(1.3rem, 2.2vw, 1.8rem);
+    /* } */
+}
+
+/* Custom width for About Me section container */
+#about .container {
+    max-width: 1500px; /* Make the About Me section container wider */
+}
+
+/* Make sure there are no lingering placeholders or invalid CSS beyond this point */
+
