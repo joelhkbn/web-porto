@@ -221,20 +221,6 @@ header.header-scrolled {
     width: 70%;
 }
 
-.hamburger {
-    display: none;
-    cursor: pointer;
-}
-
-.bar {
-    display: block;
-    width: 25px;
-    height: 2px; /* Thinner bars */
-    margin: 6px auto;
-    background-color: var(--hamburger-bar-color); /* Hamburger bar color */
-    transition: all var(--transition-speed);
-}
-
 /* Hero Section */
 .hero-section {
     min-height: 100vh;
@@ -2357,14 +2343,18 @@ section {
 }
 
 /* Remove the section-specific gradient and use the site's main gradient */
+/*
 .clients-section::before {
     display: none;
 }
+*/
 
 /* Light mode version of the gradient - also removed as we'll use the site's main background */
+/*
 body.light-mode .clients-section::before {
     display: none;
 }
+*/
 
 .clients-section h2 {
     margin-bottom: 40px;
@@ -2475,40 +2465,6 @@ body:not(.light-mode) .client-item:nth-child(6) .client-logo {
 }
 
 /* About Section & Contact Section (Will adapt to theme) */
-
-/* OLD About Me section styles - COMMENTED OUT */
-/*
-.about-section h2, .contact-section h2 { ... }
-.about-section .container, .contact-section .container { ... }
-.about-section p, .contact-section p { ... }
-.about-photos { ... }
-.about-photo-grid { ... }
-.about-photo { ... }
-.about-photo:hover { ... }
-.about-text { ... }
-.about-text p { ... }
-.skills { ... }
-.skills h3 { ... }
-.skills ul { ... }
-.skills li { ... }
-.skills li::before { ... }
-@media (min-width: 768px) {
-    .about-content:not(.testimonial-layout) { 
-        flex-direction: row;
-        align-items: flex-start;
-    }
-    .about-photos { width: 40%; }
-    .about-text { width: 60%; padding-left: 2rem; }
-}
-@media (max-width: 767px) {
-    .about-photo-grid { max-width: 400px; }
-    .about-text { margin-top: 1rem; }
-}
-@media (max-width: 480px) {
-    .about-photo-grid { grid-template-columns: 1fr; max-width: 300px; }
-    .about-photo { height: 220px; }
-}
-*/
 
 /* NEW Testimonial Layout for About Section */
 .testimonial-layout {
@@ -2656,27 +2612,6 @@ body:not(.light-mode) .client-item:nth-child(6) .client-logo {
     font-weight: bold;
 }
 
-
-/* Remove or comment out unused testimonial-specific styles */
-/*
-.quote-icon-container { ... }
-.testimonial-quote { ... }
-.testimonial-quote .highlight { ... }
-.testimonial-link { ... }
-.testimonial-link:hover { ... }
-.testimonial-separator { ... }
-.testimonial-author .author-name { ... }
-.testimonial-author .author-website { ... }
-.testimonial-navigation { ... }
-.testimonial-navigation .nav-arrow { ... }
-.testimonial-navigation .nav-arrow:hover { ... }
-*/
-
-/* OLD About Me section styles - ALREADY COMMENTED OUT */
-/*
-.about-photos { ... }
-...*/
-
 /* Responsive adjustments for the new testimonial layout */
 @media (max-width: 768px) {
     .testimonial-layout {
@@ -2713,14 +2648,6 @@ body:not(.light-mode) .client-item:nth-child(6) .client-logo {
 }
 
 /* Make sure there are no lingering placeholders or invalid CSS beyond this point */
-
-/* --- REMOVE or OVERRIDE OLD DARK BACKGROUND --- */
-/* .about-section {
-    padding: 100px 0;
-    background: linear-gradient(135deg, var(--bg-color) 0%, var(--bg-color-secondary) 100%);
-    position: relative;
-    overflow: hidden;
-} */
 
 /* --- PREMIUM BACKGROUND FOR ABOUT SECTION --- */
 .about-section {
@@ -2850,13 +2777,9 @@ body.light-mode .premium-text-column {
     font-family: var(--font-family); /* Unified font */
     font-size: 1.1rem;
     line-height: 1.75;
-    color: #232323;
     margin-bottom: 20px;
     text-align: left;
     letter-spacing: 0.01em;
-}
-body.light-mode .premium-paragraph {
-    color: #232323;
 }
 
 .premium-expertise {
@@ -2872,9 +2795,6 @@ body.light-mode .premium-paragraph {
     text-align: left;
     font-weight: 700;
     letter-spacing: 0.02em;
-}
-body.light-mode .premium-subtitle {
-    color: #232323;
 }
 .premium-subtitle::after {
     content: '';
@@ -2941,8 +2861,8 @@ body.light-mode .premium-quote {
     box-shadow: 0 2px 12px rgba(0,0,0,0.06);
 }
 
-/* ... (sisa CSS untuk About Me dan lainnya) ... */
-/* CSS untuk .premium-media-container dan .premium-nav-button tidak perlu diubah khusus light/dark karena sudah cukup kontras */
+/* ... (rest of the CSS for About Me and other sections) ... */
+/* CSS for .premium-media-container and .premium-nav-button doesn't need to be changed specifically for light/dark as they are already contrasting */
 
 .premium-paragraph, .premium-subtitle, .quote-text { /* .skill-content h4 removed from this group */
     color: var(--text-color-headings);
