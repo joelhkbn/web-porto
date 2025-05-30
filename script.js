@@ -1,5 +1,6 @@
 const hamburger = document.querySelector(".hamburger");
 const navMenu = document.querySelector(".nav-menu");
+const navOverlay = document.querySelector(".nav-overlay");
 const navLinks = document.querySelectorAll(".nav-link"); // Get all nav links
 const sections = document.querySelectorAll("section[id]");
 const header = document.querySelector("header"); 
@@ -11,11 +12,30 @@ let isAnimating = false; // Flag to prevent animation overlap
 hamburger.addEventListener("click", () => {
     hamburger.classList.toggle("active");
     navMenu.classList.toggle("active");
+    navOverlay.classList.toggle("active");
 });
 
-document.querySelectorAll(".nav-link").forEach(n => n.addEventListener("click", () => {
+// Keyboard accessibility for hamburger
+hamburger.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" || e.key === " " || e.key === "Spacebar") {
+        e.preventDefault();
+        hamburger.click();
+    }
+});
+
+if (navOverlay) {
+    navOverlay.addEventListener("click", () => {
+        hamburger.classList.remove("active");
+        navMenu.classList.remove("active");
+        navOverlay.classList.remove("active");
+    });
+}
+
+// When a nav-link is clicked, close menu and overlay
+navLinks.forEach(n => n.addEventListener("click", () => {
     hamburger.classList.remove("active");
     navMenu.classList.remove("active");
+    if (navOverlay) navOverlay.classList.remove("active");
 }));
 
 // Disable updateTunnelView function to allow regular scrolling

@@ -1,0 +1,1925 @@
+// Core application state and DOM elements
+const APP = {
+    DOM: {
+        nav: {
+            hamburger: document.querySelector(".hamburger"),
+            menu: document.querySelector(".nav-menu"),
+            links: document.querySelectorAll(".nav-link")
+        },
+        sections: document.querySelectorAll("section[id]"),
+        header: document.querySelector("header"),
+        modal: {
+            container: document.getElementById("imagePreviewModal"),
+            image: document.getElementById("modalImageContent"),
+            caption: document.getElementById("modalCaption"),
+            closeBtn: document.querySelector(".modal-close-button"),
+            prevBtn: document.querySelector(".image-modal .modal-nav-button.prev"),
+            nextBtn: document.querySelector(".image-modal .modal-nav-button.next")
+        },
+        theme: {
+            toggle: document.getElementById('theme-toggle-checkbox'),
+            sunIcon: document.querySelector('.theme-switch-container .sun-icon'),
+            moonIcon: document.querySelector('.theme-switch-container .moon-icon')
+        },
+        backToTop: document.querySelector('.back-to-top'),
+        languageSelect: document.getElementById('language-select'),
+        flyerImages: document.querySelectorAll(".flyer-image-container img"),
+        background: {
+            gradientWrapper: document.querySelector('.bg-gradient-wrapper'),
+            gradientFade: document.querySelector('.bg-gradient-fade')
+        }
+    },
+    config: {
+        scrollThreshold: 50,
+        scrollShowThreshold: 400,
+        flyerAnimationConfig: {
+            desiredCount: 18,
+            minDuration: 7,
+            maxDuration: 15,
+            minDelay: 0,
+            maxDelay: 5
+        }
+    },
+    state: {
+        currentImageIndex: 0,
+        isAnimating: false,
+        lastScrollTop: 0,
+        scrollingTimeoutId: null,
+        currentSection: 0,
+        theme: localStorage.getItem('theme') || 'dark',
+        language: localStorage.getItem('selectedLanguage') || 'id'
+    }
+};
+
+// Core DOM elements
+const DOM = {
+    hamburger: document.querySelector(".hamburger"),
+    navMenu: document.querySelector(".nav-menu"),
+    navLinks: document.querySelectorAll(".nav-link"),
+    sections: document.querySelectorAll("section[id]"),
+    header: document.querySelector("header"),
+    backToTop: document.querySelector('.back-to-top'),
+    bgGradient: {
+        wrapper: document.querySelector('.bg-gradient-wrapper'),
+        fade: document.querySelector('.bg-gradient-fade')
+    }
+};
+
+// Constants
+const CONFIG = {
+    scrollThreshold: 50,
+    scrollShowThreshold: 400
+};
+
+function initializeThemeAndLanguage() {
+    // Theme initialization
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+
+    // Language initialization
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'id';
+    setLanguage(savedLanguage);
+}
+
+// Initialize all event listeners
+function initEventListeners() {
+    // Navigation
+    DOM.hamburger?.addEventListener("click", () => {
+        DOM.hamburger.classList.toggle("active");
+        DOM.navMenu.classList.toggle("active");
+    });
+
+    DOM.navLinks?.forEach(link => {
+        link.addEventListener("click", () => {
+            DOM.hamburger.classList.remove("active");
+            DOM.navMenu.classList.remove("active");
+        });
+    });
+
+    // Scroll events
+    window.addEventListener('scroll', handleScroll);
+    DOM.backToTop?.addEventListener('click', scrollToTop);
+
+    // Theme and language
+    initializeThemeAndLanguage();
+}
+
+// Document ready initialization
+document.addEventListener('DOMContentLoaded', () => {
+    initEventListeners();
+    initializeMainFeatures();
+});
+
+// Disable updateTunnelView function to allow regular scrolling
+function updateTunnelView(newActiveIndex, scrollDirection = null) {
+    // Completely disabled to allow normal scrolling
+    console.log("Section navigation disabled for better content visibility");
+    return;
+}
+
+// Function to create SAO-style prompt at the end of the tunnel
+function showSAOPrompt() {
+    let saoPrompt = document.getElementById('sao-prompt');
+    
+    if (!saoPrompt) {
+        // Create the SAO prompt if it doesn't exist
+        saoPrompt = document.createElement('div');
+        saoPrompt.id = 'sao-prompt';
+        saoPrompt.className = 'sao-prompt';
+        
+        const promptContent = document.createElement('div');
+        promptContent.className = 'sao-prompt-content';
+        
+        const title = document.createElement('h3');
+        title.textContent = 'Terima kasih telah menjelajahi portofolio saya!';
+        title.className = 'sao-prompt-title';
+        
+        const question = document.createElement('p');
+        question.textContent = 'Apakah Anda ingin memesan desain flyer?';
+        question.className = 'sao-prompt-question';
+        
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'sao-prompt-buttons';
+        
+        const yesButton = document.createElement('button');
+        yesButton.textContent = 'Ya, Hubungi Sekarang';
+        yesButton.className = 'sao-button yes-button';
+        yesButton.addEventListener('click', () => {
+            // Direct to existing WhatsApp link or floating widget click
+            const whatsappWidget = document.querySelector('.whatsapp-widget');
+            if (whatsappWidget) {
+                whatsappWidget.click();
+            } else {
+                window.open('https://wa.me/yourphonenumber', '_blank');
+            }
+            hideSAOPrompt();
+        });
+        
+        const noButton = document.createElement('button');
+        noButton.textContent = 'Belum, Kembali ke Portofolio';
+        noButton.className = 'sao-button no-button';
+        noButton.addEventListener('click', () => {
+            // Go back to portfolio section
+            const portfolioIndex = Array.from(sections).findIndex(sec => sec.id === 'portfolio');
+            if (portfolioIndex !== -1) {
+                hideSAOPrompt();
+                updateTunnelView(portfolioIndex, 'prev');
+            }
+        });
+        
+        buttonsContainer.appendChild(yesButton);
+        buttonsContainer.appendChild(noButton);
+        
+        promptContent.appendChild(title);
+        promptContent.appendChild(question);
+        promptContent.appendChild(buttonsContainer);
+        saoPrompt.appendChild(promptContent);
+        
+        document.body.appendChild(saoPrompt);
+    }
+    
+    // Show the prompt with animation
+    setTimeout(() => {
+        saoPrompt.classList.add('active');
+    }, 200);
+}
+
+function hideSAOPrompt() {
+    const saoPrompt = document.getElementById('sao-prompt');
+    if (saoPrompt) {
+        saoPrompt.classList.remove('active');
+    }
+}
+
+// Disable updateTunnelView function to allow regular scrolling
+function updateTunnelView(newActiveIndex, scrollDirection = null) {
+    // Completely disabled to allow normal scrolling
+    console.log("Section navigation disabled for better content visibility");
+    return;
+}
+
+// Function to create SAO-style prompt at the end of the tunnel
+function showSAOPrompt() {
+    let saoPrompt = document.getElementById('sao-prompt');
+    
+    if (!saoPrompt) {
+        // Create the SAO prompt if it doesn't exist
+        saoPrompt = document.createElement('div');
+        saoPrompt.id = 'sao-prompt';
+        saoPrompt.className = 'sao-prompt';
+        
+        const promptContent = document.createElement('div');
+        promptContent.className = 'sao-prompt-content';
+        
+        const title = document.createElement('h3');
+        title.textContent = 'Terima kasih telah menjelajahi portofolio saya!';
+        title.className = 'sao-prompt-title';
+        
+        const question = document.createElement('p');
+        question.textContent = 'Apakah Anda ingin memesan desain flyer?';
+        question.className = 'sao-prompt-question';
+        
+        const buttonsContainer = document.createElement('div');
+        buttonsContainer.className = 'sao-prompt-buttons';
+        
+        const yesButton = document.createElement('button');
+        yesButton.textContent = 'Ya, Hubungi Sekarang';
+        yesButton.className = 'sao-button yes-button';
+        yesButton.addEventListener('click', () => {
+            // Direct to existing WhatsApp link or floating widget click
+            const whatsappWidget = document.querySelector('.whatsapp-widget');
+            if (whatsappWidget) {
+                whatsappWidget.click();
+            } else {
+                window.open('https://wa.me/yourphonenumber', '_blank');
+            }
+            hideSAOPrompt();
+        });
+        
+        const noButton = document.createElement('button');
+        noButton.textContent = 'Belum, Kembali ke Portofolio';
+        noButton.className = 'sao-button no-button';
+        noButton.addEventListener('click', () => {
+            // Go back to portfolio section
+            const portfolioIndex = Array.from(sections).findIndex(sec => sec.id === 'portfolio');
+            if (portfolioIndex !== -1) {
+                hideSAOPrompt();
+                updateTunnelView(portfolioIndex, 'prev');
+            }
+        });
+        
+        buttonsContainer.appendChild(yesButton);
+        buttonsContainer.appendChild(noButton);
+        
+        promptContent.appendChild(title);
+        promptContent.appendChild(question);
+        promptContent.appendChild(buttonsContainer);
+        saoPrompt.appendChild(promptContent);
+        
+        document.body.appendChild(saoPrompt);
+    }
+    
+    // Show the prompt with animation
+    setTimeout(() => {
+        saoPrompt.classList.add('active');
+    }, 200);
+}
+
+function hideSAOPrompt() {
+    const saoPrompt = document.getElementById('sao-prompt');
+    if (saoPrompt) {
+        saoPrompt.classList.remove('active');
+    }
+}
+
+// Nav link click listeners for tunnel effect
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Allow normal browser scrolling behavior with smooth scrolling
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            e.preventDefault(); // Prevent default only if we have the target
+            
+            // Enhanced smooth scrolling with better easing
+            smoothScrollTo(targetElement);
+        }
+        
+        // Close mobile menu if open
+        if (hamburger.classList.contains('active')) {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }
+    });
+});
+
+// Enhanced smooth scrolling function
+function smoothScrollTo(targetElement) {
+    const headerHeight = document.querySelector('header').offsetHeight;
+    const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1000; // longer duration for smoother transition
+    let startTimestamp = null;
+    
+    function step(timestamp) {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = timestamp - startTimestamp;
+        
+        // Easing function for smoother transition (cubic easing out)
+        const easeOutCubic = function(t) {
+            return (--t) * t * t + 1;
+        };
+        
+        // Calculate current position using easing
+        const progressFraction = Math.min(progress / duration, 1);
+        const easeProgress = easeOutCubic(progressFraction);
+        
+        window.scrollTo(0, startPosition + distance * easeProgress);
+        
+        if (progress < duration) {
+            window.requestAnimationFrame(step);
+        } else {
+            // When scrolling is complete, focus on the section for accessibility
+            targetElement.setAttribute('tabindex', '-1');
+            targetElement.focus({preventScroll: true});
+            
+            // Add highlight animation to indicate arrival
+            targetElement.classList.add('section-highlight');
+            setTimeout(() => {
+                targetElement.classList.remove('section-highlight');
+            }, 1000);
+        }
+    }
+    
+    window.requestAnimationFrame(step);
+}
+
+// Header scroll effect (independent of section scrolling for now)
+window.addEventListener("scroll", () => {
+    if (header) { 
+        if (window.pageYOffset > scrollThreshold) {
+            header.classList.add("header-scrolled");
+        } else {
+            header.classList.remove("header-scrolled");
+        }
+    }
+});
+
+// Initialize corridor wall elements for Disneyland-style experience
+function initCorridorWalls() {
+    // Create left and right corridor walls for each section
+    sections.forEach((section, index) => {
+        // Skip if walls already exist
+        if (section.querySelector('.corridor-wall-left')) return;
+        
+        // Create left wall
+        const leftWall = document.createElement('div');
+        leftWall.className = 'corridor-wall corridor-wall-left';
+        
+        // Create right wall
+        const rightWall = document.createElement('div');
+        rightWall.className = 'corridor-wall corridor-wall-right';
+        
+        // Create floor and ceiling
+        const floor = document.createElement('div');
+        floor.className = 'corridor-floor';
+        
+        const ceiling = document.createElement('div');
+        ceiling.className = 'corridor-ceiling';
+        
+        // Add wall content based on section
+        const sectionId = section.id;
+        
+        if (sectionId === 'hero') {
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-pencil-ruler"></i>
+                    <h3>Desain Kreatif</h3>
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-palette"></i>
+                    <h3>Visual Menarik</h3>
+                </div>
+            `;
+        } else if (sectionId === 'portfolio') {
+            // Find actual flyer images from the portfolio section
+            const flyerImages = Array.from(document.querySelectorAll('#portfolio .flyer-image-container img'));
+            
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <h3>Portofolio Terbaik</h3>
+                    ${flyerImages[0] ? `<img src="${flyerImages[0].src}" class="corridor-img" alt="Flyer Preview">` : 
+                    '<i class="wall-icon fas fa-image"></i>'}
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <h3>Karya Berkualitas</h3>
+                    ${flyerImages[1] ? `<img src="${flyerImages[1].src}" class="corridor-img" alt="Flyer Preview">` : 
+                    '<i class="wall-icon fas fa-image"></i>'}
+                </div>
+            `;
+        } else if (sectionId === 'about') {
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-user"></i>
+                    <h3>Perkenalan</h3>
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-briefcase"></i>
+                    <h3>Pengalaman Desain</h3>
+                    <p>+3 tahun pengalaman di bidang desain grafis</p>
+                </div>
+            `;
+        } else if (sectionId === 'contact') {
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-envelope"></i>
+                    <h3>Hubungi Segera</h3>
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-phone"></i>
+                    <h3>Diskusi Lebih Lanjut</h3>
+                </div>
+            `;
+        }
+        
+        // Add walls, floor and ceiling to the section
+        section.appendChild(leftWall);
+        section.appendChild(rightWall);
+        section.appendChild(floor);
+        section.appendChild(ceiling);
+    });
+}
+
+// Make gallery creation more reliable
+function createGalleryHall() {
+    const portfolioSection = document.getElementById('portfolio');
+    
+    // Skip if gallery hall already exists
+    if (portfolioSection.querySelector('.gallery-hall')) return;
+    
+    console.log("Creating simplified gallery hall");
+    
+    // Create gallery hall structure with simplifications
+    const galleryHall = document.createElement('div');
+    galleryHall.className = 'gallery-hall';
+    galleryHall.style.position = 'absolute';
+    galleryHall.style.top = '0';
+    galleryHall.style.left = '0';
+    galleryHall.style.width = '100%';
+    galleryHall.style.height = '100%';
+    galleryHall.style.zIndex = '0';
+    
+    // Create background wall only (simplified approach)
+    const backWall = document.createElement('div');
+    backWall.className = 'gallery-wall gallery-wall-back';
+    backWall.style.position = 'absolute';
+    backWall.style.width = '100%'; 
+    backWall.style.height = '100%';
+    backWall.style.top = '0';
+    backWall.style.left = '0';
+    backWall.style.backgroundColor = '#f0f0f0';
+    backWall.style.boxShadow = 'inset 0 0 30px rgba(0,0,0,0.1)';
+    
+    // Assemble the gallery hall (simplified)
+    galleryHall.appendChild(backWall);
+    
+    // Add the gallery hall to the portfolio section
+    portfolioSection.style.position = 'relative';
+    portfolioSection.style.zIndex = '1';
+    
+    // Insert the gallery hall at the beginning of the portfolio section
+    portfolioSection.insertBefore(galleryHall, portfolioSection.firstChild);
+    
+    // Ensure the container is properly styled and visible
+    const portfolioContainer = portfolioSection.querySelector('.container');
+    if (portfolioContainer) {
+        portfolioContainer.style.position = 'relative';
+        portfolioContainer.style.zIndex = '2';
+    }
+    
+    console.log("Simplified gallery hall created");
+}
+
+// Back to Top Button Functionality
+const backToTopButton = document.querySelector('.back-to-top');
+const bgGradientWrapper = document.querySelector('.bg-gradient-wrapper');
+const bgGradientFade = document.querySelector('.bg-gradient-fade');
+const scrollShowThreshold = 400; // How far to scroll before showing the button
+
+// Variabel untuk deteksi arah scroll
+let lastScrollTop = 0;
+let scrollingTimeoutId = null;
+
+// Show/hide back to top button based on scroll position
+function handleScroll() {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Mendeteksi arah scroll
+    if (currentScrollTop < lastScrollTop) {
+        // Scrolling ke atas
+        document.body.classList.add('scrolling-up');
+    } else {
+        // Scrolling ke bawah atau diam
+        document.body.classList.remove('scrolling-up');
+    }
+    
+    // Bersihkan timeout sebelumnya jika ada
+    if (scrollingTimeoutId) {
+        clearTimeout(scrollingTimeoutId);
+    }
+    
+    // Set timeout untuk menghapus class scrolling-up setelah berhenti scroll
+    scrollingTimeoutId = setTimeout(() => {
+        document.body.classList.remove('scrolling-up');
+    }, 300);
+    
+    // Simpan posisi scroll terakhir
+    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+    
+    // Tampilkan/sembunyikan tombol
+    if (currentScrollTop > scrollShowThreshold) {
+        backToTopButton.classList.add('visible');
+    } else {
+        backToTopButton.classList.remove('visible');
+    }
+    
+    // Adjust gradient opacity based on scroll position
+    // Maximum scroll progress capped at 2000px for full effect
+    const scrollProgress = Math.min(currentScrollTop / 2000, 1);
+    bgGradientWrapper.style.opacity = 1 - (scrollProgress * 0.5); // Fade to 50% at most
+}
+
+// Scroll to top when button is clicked
+function scrollToTop() {
+    // Tambahkan kelas tambahan untuk animasi roket "boost"
+    document.body.classList.add('rocket-boosting');
+    
+    // Aktifkan efek api roket
+    if (backToTopButton) {
+        const rocketFlame = backToTopButton.querySelector('.rocket-flame');
+        if (rocketFlame) {
+            rocketFlame.style.opacity = '1';
+        }
+    }
+    
+    // Scroll ke atas dengan animasi smooth
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+    
+    // Hapus kelas dan reset efek setelah animasi selesai
+    setTimeout(() => {
+        document.body.classList.remove('rocket-boosting');
+        if (backToTopButton) {
+            const rocketFlame = backToTopButton.querySelector('.rocket-flame');
+            if (rocketFlame && window.pageYOffset < 10) {
+                rocketFlame.style.opacity = '';
+            }
+        }
+    }, 1000); // Durasi sedikit lebih lama dari durasi scrolling
+}
+
+// Event listeners for back to top functionality
+window.addEventListener('scroll', handleScroll);
+if (backToTopButton) {
+    backToTopButton.addEventListener('click', scrollToTop);
+}
+
+// Initialize gradient and back to top when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize existing functionality
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'id';
+    setLanguage(savedLanguage);
+    
+    // Initialize flying flyers for hero section only
+    initFlyingFlyersAnimation();
+    
+    // Create gallery hall for portfolio section
+    setTimeout(createGalleryHall, 100); // Small delay to ensure DOM is ready
+    
+    // Initialize animation on scroll
+    initAnimateOnScroll();
+    
+    // Initialize custom cursor
+    initCustomCursor();
+    
+    // Initialize custom right-click menu
+    initCustomContextMenu();
+    
+    // Initialize back to top visibility
+    handleScroll();
+    
+    // Initialize client logos
+    loadClientLogos();
+    
+    // Initialize About Me Slideshow
+    initAboutMeSlideshow();
+    
+    console.log("Normal scrolling enabled for better content visibility");
+});
+
+// Image Preview Modal Functionality
+const modal = document.getElementById("imagePreviewModal");
+const modalImage = document.getElementById("modalImageContent");
+const modalCaption = document.getElementById("modalCaption");
+const closeModalButton = document.querySelector(".modal-close-button");
+const modalPrevButton = document.querySelector(".image-modal .modal-nav-button.prev");
+const modalNextButton = document.querySelector(".image-modal .modal-nav-button.next");
+
+const flyerImageElements = document.querySelectorAll(".flyer-image-container img");
+let currentImageIndex = 0;
+
+// Helper function to update modal content
+function updateModalContent(index) {
+    const imgElement = flyerImageElements[index];
+    
+    modalImage.style.opacity = 0; // Start fade out
+
+    // Give a moment for opacity to take effect before changing src and fading in
+    setTimeout(() => {
+        modalImage.src = imgElement.src;
+        // No need to force onload for opacity, browser handles image loading before display
+        modalImage.style.opacity = 1; // Start fade in
+
+        const flyerItem = imgElement.closest('.flyer-grid-item');
+        let captionText = "";
+        if (flyerItem) {
+            const titleElement = flyerItem.querySelector('.flyer-caption h3');
+            const descElement = flyerItem.querySelector('.flyer-caption p');
+            if (titleElement) captionText += titleElement.textContent;
+            if (descElement) captionText += (captionText ? " - " : "") + descElement.textContent;
+        }
+        modalCaption.textContent = captionText || imgElement.alt; 
+    }, 150); // 150ms delay, can be adjusted. Should be less than opacity transition time.
+    
+    currentImageIndex = index;
+}
+
+flyerImageElements.forEach((img, index) => {
+    img.addEventListener("click", function() {
+        modal.style.display = "block";
+        updateModalContent(index);
+    });
+});
+
+if(closeModalButton) {
+    closeModalButton.onclick = function() {
+        modal.style.display = "none";
+    }
+}
+
+// Close modal when clicking outside the image content (on the overlay)
+if (modal) {
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) { 
+            modal.style.display = "none";
+        }
+    });
+}
+
+// Modal Carousel Navigation
+if (modalPrevButton && modalNextButton) {
+    modalPrevButton.addEventListener('click', () => {
+        let newIndex = currentImageIndex - 1;
+        if (newIndex < 0) {
+            newIndex = flyerImageElements.length - 1; // Loop to last image
+        }
+        updateModalContent(newIndex);
+    });
+
+    modalNextButton.addEventListener('click', () => {
+        let newIndex = currentImageIndex + 1;
+        if (newIndex >= flyerImageElements.length) {
+            newIndex = 0; // Loop to first image
+        }
+        updateModalContent(newIndex);
+    });
+}
+
+// (Space for a new feature if needed in the future) 
+
+// Theme Toggle Functionality
+const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
+const bodyElement = document.body;
+
+// Function to apply the selected theme
+function applyTheme(theme) {
+    const sunIcon = document.querySelector('.theme-switch-container .sun-icon');
+    const moonIcon = document.querySelector('.theme-switch-container .moon-icon');
+
+    if (theme === 'light') {
+        bodyElement.classList.add('light-mode');
+        if(themeToggleCheckbox) themeToggleCheckbox.checked = true;
+        if(sunIcon) sunIcon.style.display = 'block';
+        if(moonIcon) moonIcon.style.display = 'none';
+    } else { // Default to dark theme
+        bodyElement.classList.remove('light-mode');
+        if(themeToggleCheckbox) themeToggleCheckbox.checked = false;
+        if(sunIcon) sunIcon.style.display = 'none';
+        if(moonIcon) moonIcon.style.display = 'block';
+    }
+}
+
+// Event listener for the theme toggle
+if (themeToggleCheckbox) {
+    themeToggleCheckbox.addEventListener('change', () => {
+        if (themeToggleCheckbox.checked) {
+            applyTheme('light');
+            localStorage.setItem('theme', 'light');
+        } else {
+            applyTheme('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+}
+
+// Multi-language Functionality
+const translations = {
+    en: {
+        pageTitle: "My Portfolio - Flyer Designer",
+        navLogo: "Portfolio",
+        navHome: "Home",
+        navPortfolio: "Portfolio",
+        navClients: "Clients",
+        navAbout: "About Me",
+        navContact: "Contact",
+        heroTitle: "Creative Flyer Design Services in Bitung",
+        heroSubtitle: "Helping you convey messages through attractive and effective flyer designs.",
+        heroCTA: "View Design Portfolio",
+        scrollIndicator: "Scroll",
+        portfolioTitle: "Flyer Gallery",
+        clientsTitle: "Our Clients",
+        clientsSubtitle: "Some organizations and companies that have trusted us with their design needs.",
+        flyer1Title: "Official Event Celebration",
+        flyer1Desc: "Flyer for official government holiday celebration event.",
+        flyer1Alt: "Flyer for official government holiday celebration",
+        flyer2Title: "Official Event Celebration",
+        flyer2Desc: "Flyer for official government holiday celebration event.",
+        flyer2Alt: "Flyer for official government holiday celebration",
+        flyer3Title: "Government Institution Flyer",
+        flyer3Desc: "Custom designed flyer for government institution needs.",
+        flyer3Alt: "Flyer for government institution",
+        flyer4Title: "Government Institution Flyer",
+        flyer4Desc: "Custom designed flyer for government institution needs.",
+        flyer4Alt: "Flyer for government institution",
+        flyer5Title: "Private Event Flyer",
+        flyer5Desc: "Professionally designed flyer for private corporate events.",
+        flyer5Alt: "Flyer for private event",
+        flyer6Title: "Religious Event Flyer",
+        flyer6Desc: "Elegant flyer design for religious ceremonies and events.",
+        flyer6Alt: "Flyer for religious event",
+        flyer7Title: "Official Personal Flyer",
+        flyer7Desc: "Personalized flyer design for government official needs.",
+        flyer7Alt: "Personal flyer for government official",
+        flyer8Title: "Official Personal Flyer",
+        flyer8Desc: "Personalized flyer design for government official needs.",
+        flyer8Alt: "Personal flyer for government official",
+        flyer9Title: "Institution Flyer",
+        flyer9Desc: "Professional flyer design for institutional events and announcements.",
+        flyer9Alt: "Flyer for institution",
+        flyer10Title: "Institution Flyer",
+        flyer10Desc: "Professional flyer design for institutional events and announcements.",
+        flyer10Alt: "Flyer for institution",
+        aboutTitle: "About Me",
+        aboutParagraph: "As a graphic designer from Bitung, Indonesia, I focus on creating flyers that are not only visually appealing but also informative, supporting effective communication for your needs.",
+        aboutParagraph2: "I have over 5 years of experience as a graphic designer specializing in promotional design and marketing materials. With a formal education background in Visual Communication Design, I have developed a modern and eye-catching design style to ensure your flyers get the attention they deserve.",
+        aboutParagraph3: "Besides flyer design, I also have skills in photography which helps me understand visual composition and effective use of color. My approach to design is always customer-oriented, ensuring the final result aligns with your brand's specific vision and needs.",
+        skillsTitle: "Skills:",
+        skill1: "Promotional Flyer Design",
+        skill2: "Digital Marketing Design",
+        skill3: "Branding & Visual Identity",
+        skill4: "Desktop Publishing",
+        skill5: "Adobe Creative Suite",
+        contactTitle: "Contact Me",
+        contactIntro: "Ready to bring your flyer ideas to life for your business. Contact me for further discussion!",
+        formNamePlaceholder: "Your Name",
+        formEmailPlaceholder: "Your Email (for reply)",
+        formSubjectPlaceholder: "Message Subject",
+        formMessagePlaceholder: "Your Message",
+        formSubmitButton: "Send Message via Email",
+        footerText: "Nama Anda. Flyer Design Services in Bitung.",
+        modalPreviousAriaLabel: "Previous Image",
+        modalNextAriaLabel: "Next Image",
+        widgetWhatsAppAriaLabel: "Contact via WhatsApp",
+        widgetTelegramAriaLabel: "Contact via Telegram",
+        widgetWhatsAppTooltip: "Chat on WhatsApp",
+        widgetTelegramTooltip: "Chat on Telegram",
+        contextMenuHeader: "Contact via:",
+        contextMenuWhatsApp: "WhatsApp",
+        contextMenuTelegram: "Telegram",
+        aboutPhoto1Alt: "About Me - Photo 1",
+        aboutPhoto2Alt: "About Me - Photo 2",
+        aboutPhoto3Alt: "About Me - Photo 3",
+        aboutPhoto4Alt: "About Me - Photo 4"
+    },
+    id: {
+        pageTitle: "Portfolio Saya - Desainer Flyer",
+        navLogo: "Portfolio",
+        navHome: "Beranda",
+        navPortfolio: "Portfolio",
+        navClients: "Klien",
+        navAbout: "Tentang Saya",
+        navContact: "Kontak",
+        heroTitle: "Jasa Desain Flyer Kreatif di Bitung",
+        heroSubtitle: "Membantu Anda menyampaikan pesan melalui desain flyer yang menarik dan efektif.",
+        heroCTA: "Lihat Portfolio Desain",
+        scrollIndicator: "Scroll",
+        portfolioTitle: "Galeri Flyer",
+        clientsTitle: "Klien Kami",
+        clientsSubtitle: "Beberapa instansi dan perusahaan yang telah mempercayakan kebutuhan desain mereka pada kami.",
+        flyer1Title: "Perayaan Hari Besar Pejabat",
+        flyer1Desc: "Flyer perayaan hari besar untuk pejabat.",
+        flyer1Alt: "Flyer perayaan hari besar untuk pejabat",
+        flyer2Title: "Perayaan Hari Besar Pejabat",
+        flyer2Desc: "Flyer perayaan hari besar untuk pejabat.",
+        flyer2Alt: "Flyer perayaan hari besar untuk pejabat",
+        flyer3Title: "Flyer Instansi Pemerintah",
+        flyer3Desc: "Untuk instansi pemerintah.",
+        flyer3Alt: "Flyer untuk instansi pemerintah",
+        flyer4Title: "Flyer Instansi Pemerintah",
+        flyer4Desc: "Untuk instansi pemerintah.",
+        flyer4Alt: "Flyer untuk instansi pemerintah",
+        flyer5Title: "Flyer Event Swasta",
+        flyer5Desc: "Untuk event swasta.",
+        flyer5Alt: "Flyer untuk event swasta",
+        flyer6Title: "Flyer Acara Kerohanian",
+        flyer6Desc: "Acara kerohanian.",
+        flyer6Alt: "Flyer acara kerohanian",
+        flyer7Title: "Flyer Personal Pejabat",
+        flyer7Desc: "Flyer personal pejabat.",
+        flyer7Alt: "Flyer personal pejabat",
+        flyer8Title: "Flyer Personal Pejabat",
+        flyer8Desc: "Flyer personal pejabat.",
+        flyer8Alt: "Flyer personal pejabat",
+        flyer9Title: "Flyer Instansi",
+        flyer9Desc: "Untuk flyer instansi.",
+        flyer9Alt: "Flyer untuk instansi",
+        flyer10Title: "Flyer Instansi",
+        flyer10Desc: "Untuk flyer instansi.",
+        flyer10Alt: "Flyer untuk instansi",
+        aboutTitle: "Tentang Saya",
+        aboutParagraph: "Sebagai desainer grafis dari Bitung, Indonesia, saya berfokus pada layanan pembuatan flyer yang tidak hanya menarik secara visual tetapi juga informatif, mendukung komunikasi efektif untuk kebutuhan Anda.",
+        aboutParagraph2: "Saya memiliki pengalaman lebih dari 5 tahun sebagai graphic designer dengan spesialisasi di desain promosi dan marketing material. Dengan latar belakang pendidikan formal di bidang Desain Komunikasi Visual, saya telah mengembangkan gaya desain yang modern dan eye-catching untuk memastikan flyer Anda mendapatkan perhatian yang diinginkan.",
+        aboutParagraph3: "Selain desain flyer, saya juga memiliki kemampuan dalam fotografi yang membantu saya memahami komposisi visual dan penggunaan warna yang efektif. Pendekatan saya dalam desain selalu customer-oriented, memastikan hasil akhir sesuai dengan visi dan kebutuhan spesifik brand Anda.",
+        skillsTitle: "Keahlian:",
+        skill1: "Desain Flyer Promosi",
+        skill2: "Desain Digital Marketing",
+        skill3: "Branding & Visual Identity",
+        skill4: "Desktop Publishing",
+        skill5: "Adobe Creative Suite",
+        contactTitle: "Hubungi Saya",
+        contactIntro: "Siap membantu mewujudkan ide flyer untuk bisnis Anda. Hubungi saya untuk diskusi lebih lanjut!",
+        formNamePlaceholder: "Nama Anda",
+        formEmailPlaceholder: "Email Anda (untuk balasan)",
+        formSubjectPlaceholder: "Subjek Pesan",
+        formMessagePlaceholder: "Pesan Anda",
+        formSubmitButton: "Kirim Pesan via Email",
+        footerText: "Nama Anda. Jasa Desain Flyer di Bitung.",
+        modalPreviousAriaLabel: "Gambar Sebelumnya",
+        modalNextAriaLabel: "Gambar Berikutnya",
+        widgetWhatsAppAriaLabel: "Hubungi via WhatsApp",
+        widgetTelegramAriaLabel: "Hubungi via Telegram",
+        widgetWhatsAppTooltip: "Chat di WhatsApp",
+        widgetTelegramTooltip: "Chat di Telegram",
+        contextMenuHeader: "Hubungi Via:",
+        contextMenuWhatsApp: "WhatsApp",
+        contextMenuTelegram: "Telegram",
+        aboutPhoto1Alt: "Tentang Saya - Foto 1",
+        aboutPhoto2Alt: "Tentang Saya - Foto 2",
+        aboutPhoto3Alt: "Tentang Saya - Foto 3",
+        aboutPhoto4Alt: "Tentang Saya - Foto 4"
+    }
+};
+
+const languageSelect = document.getElementById('language-select');
+
+function setLanguage(lang) {
+    // Update all elements with data-lang-id and data-lang-en attributes
+    document.querySelectorAll('[data-lang-id], [data-lang-en]').forEach(element => {
+        if (lang === 'id') {
+            if (element.hasAttribute('data-lang-id')) {
+                element.textContent = element.getAttribute('data-lang-id');
+            }
+            if (element.hasAttribute('data-lang-placeholder-id')) {
+                element.placeholder = element.getAttribute('data-lang-placeholder-id');
+            }
+            if (element.hasAttribute('data-lang-aria-label-id')) {
+                element.setAttribute('aria-label', element.getAttribute('data-lang-aria-label-id'));
+            }
+            if (element.hasAttribute('data-lang-title-id')) {
+                element.title = element.getAttribute('data-lang-title-id');
+            }
+            if (element.hasAttribute('data-lang-alt-id')) {
+                element.alt = element.getAttribute('data-lang-alt-id');
+            }
+        } else if (lang === 'en') {
+            if (element.hasAttribute('data-lang-en')) {
+                element.textContent = element.getAttribute('data-lang-en');
+            }
+            if (element.hasAttribute('data-lang-placeholder-en')) {
+                element.placeholder = element.getAttribute('data-lang-placeholder-en');
+            }
+            if (element.hasAttribute('data-lang-aria-label-en')) {
+                element.setAttribute('aria-label', element.getAttribute('data-lang-aria-label-en'));
+            }
+            if (element.hasAttribute('data-lang-title-en')) {
+                element.title = element.getAttribute('data-lang-title-en');
+            }
+            if (element.hasAttribute('data-lang-alt-en')) {
+                element.alt = element.getAttribute('data-lang-alt-en');
+            }
+        }
+    });
+
+    // Update document title
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+        if (lang === 'id' && titleElement.hasAttribute('data-lang-id')) {
+            titleElement.textContent = titleElement.getAttribute('data-lang-id');
+        } else if (lang === 'en' && titleElement.hasAttribute('data-lang-en')) {
+            titleElement.textContent = titleElement.getAttribute('data-lang-en');
+        }
+    }
+
+    // Update HTML lang attribute
+    document.documentElement.lang = lang;
+
+    // Store the selected language in localStorage
+    localStorage.setItem('selectedLanguage', lang);
+}
+
+// Initialize language from localStorage or default to 'id'
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'id';
+    setLanguage(savedLanguage);
+
+    // Set the language selector to match the current language
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+        languageSelect.value = savedLanguage;
+        // Add event listener for language selector
+        languageSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+    }
+});
+
+// Animation functionality
+class AnimationManager {
+    static init() {
+        this.initFlyingFlyers();
+        this.initAnimateOnScroll();
+    }
+
+    static initFlyingFlyers() {
+        const container = document.querySelector('.hero-background-slideshow');
+        const heroSection = document.querySelector('.hero-section');
+        if (!container || !heroSection) return;
+
+        const flyers = Array.from(container.querySelectorAll('.hero-slide-image'));
+        if (flyers.length === 0) return;
+
+        this.cloneFlyers(container, flyers);
+        this.setupFlyerAnimations(container, heroSection);
+    }
+
+    static cloneFlyers(container, originalFlyers) {
+        const desiredCount = 18;
+        const currentCount = originalFlyers.length;
+        
+        for (let i = 0; i < desiredCount - currentCount; i++) {
+            const clone = originalFlyers[i % currentCount].cloneNode(true);
+            clone.classList.remove('active');
+            container.appendChild(clone);
+        }
+    }
+
+    static setupFlyerAnimations(container, heroSection) {
+        const flyers = container.querySelectorAll('.hero-slide-image');
+        const heroWidth = heroSection.offsetWidth;
+        const heroHeight = heroSection.offsetHeight;
+
+        flyers.forEach(flyer => {
+            const flyerWidth = flyer.offsetWidth || 150;
+            const flyerHeight = flyer.offsetHeight || 150;
+
+            Object.assign(flyer.style, {
+                top: `${Math.random() * (heroHeight - flyerHeight * 1.5)}px`,
+                left: `${Math.random() * (heroWidth - flyerWidth * 1.5)}px`,
+                animationDuration: `${Math.random() * 8 + 7}s`,
+                animationDelay: `${Math.random() * 5}s`
+            });
+
+            this.setFlyerCustomProperties(flyer);
+        });
+    }
+
+    static setFlyerCustomProperties(flyer) {
+        const properties = {
+            '--current-rotate': `${Math.random() * 30 - 15}deg`,
+            '--current-scale': Math.random() * 0.2 + 0.5,
+            '--fly-x-25': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-y-25': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-x-50': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-y-50': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-x-75': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-y-75': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`
+        };
+
+        Object.entries(properties).forEach(([prop, value]) => {
+            flyer.style.setProperty(prop, value);
+        });
+    }
+
+    static initAnimateOnScroll() {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = 'IntersectionObserver' in window 
+            ? new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, options)
+            : null;
+
+        document.querySelectorAll('.animate-on-scroll').forEach(element => {
+            observer ? observer.observe(element) : element.classList.add('is-visible');
+        });
+
+        this.setupFlyerGridAnimations();
+    }
+
+    static setupFlyerGridAnimations() {
+        document.querySelectorAll('.flyer-grid-item').forEach((item, index) => {
+            const randomRotation = Math.random() * 20 - 10;
+            const xOffset = Math.random() * 200 - 100;
+            const yOffset = Math.random() * 50 + 100;
+
+            item.style.setProperty('--random-rotate', `${randomRotation}deg`);
+            item.style.setProperty('--item-index', index);
+            item.style.setProperty('--x-offset', `${xOffset}px`);
+            item.style.setProperty('--y-offset', `${yOffset}px`);
+        });
+    }
+}
+
+// Theme management
+class ThemeManager {
+    static init() {
+        this.checkbox = document.getElementById('theme-toggle-checkbox');
+        this.savedTheme = localStorage.getItem('theme') || 'dark';
+        this.applyTheme(this.savedTheme);
+        this.setupListeners();
+    }
+
+    static setupListeners() {
+        this.checkbox?.addEventListener('change', () => {
+            const newTheme = this.checkbox.checked ? 'light' : 'dark';
+            this.applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+
+    static applyTheme(theme) {
+        const sunIcon = document.querySelector('.theme-switch-container .sun-icon');
+        const moonIcon = document.querySelector('.theme-switch-container .moon-icon');
+
+        document.body.classList.toggle('light-mode', theme === 'light');
+        if (this.checkbox) this.checkbox.checked = theme === 'light';
+        
+        if (sunIcon) sunIcon.style.display = theme === 'light' ? 'block' : 'none';
+        if (moonIcon) moonIcon.style.display = theme === 'light' ? 'none' : 'block';
+    }
+}
+
+// Initialize all animations and theme manager on DOM content loaded
+document.addEventListener('DOMContentLoaded', () => {
+    AnimationManager.init();
+    ThemeManager.init();
+});
+
+// Nav link click listeners for tunnel effect
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        // Allow normal browser scrolling behavior with smooth scrolling
+        const targetId = this.getAttribute('href').substring(1);
+        const targetElement = document.getElementById(targetId);
+        
+        if (targetElement) {
+            e.preventDefault(); // Prevent default only if we have the target
+            
+            // Enhanced smooth scrolling with better easing
+            smoothScrollTo(targetElement);
+        }
+        
+        // Close mobile menu if open
+        if (hamburger.classList.contains('active')) {
+            hamburger.classList.remove("active");
+            navMenu.classList.remove("active");
+        }
+    });
+});
+
+// Enhanced smooth scrolling function
+function smoothScrollTo(targetElement) {
+    const headerHeight = document.querySelector('header').offsetHeight;
+    const targetPosition = targetElement.getBoundingClientRect().top + window.scrollY - headerHeight;
+    const startPosition = window.pageYOffset;
+    const distance = targetPosition - startPosition;
+    const duration = 1000; // longer duration for smoother transition
+    let startTimestamp = null;
+    
+    function step(timestamp) {
+        if (!startTimestamp) startTimestamp = timestamp;
+        const progress = timestamp - startTimestamp;
+        
+        // Easing function for smoother transition (cubic easing out)
+        const easeOutCubic = function(t) {
+            return (--t) * t * t + 1;
+        };
+        
+        // Calculate current position using easing
+        const progressFraction = Math.min(progress / duration, 1);
+        const easeProgress = easeOutCubic(progressFraction);
+        
+        window.scrollTo(0, startPosition + distance * easeProgress);
+        
+        if (progress < duration) {
+            window.requestAnimationFrame(step);
+        } else {
+            // When scrolling is complete, focus on the section for accessibility
+            targetElement.setAttribute('tabindex', '-1');
+            targetElement.focus({preventScroll: true});
+            
+            // Add highlight animation to indicate arrival
+            targetElement.classList.add('section-highlight');
+            setTimeout(() => {
+                targetElement.classList.remove('section-highlight');
+            }, 1000);
+        }
+    }
+    
+    window.requestAnimationFrame(step);
+}
+
+// Header scroll effect (independent of section scrolling for now)
+window.addEventListener("scroll", () => {
+    if (header) { 
+        if (window.pageYOffset > scrollThreshold) {
+            header.classList.add("header-scrolled");
+        } else {
+            header.classList.remove("header-scrolled");
+        }
+    }
+});
+
+// Initialize corridor wall elements for Disneyland-style experience
+function initCorridorWalls() {
+    // Create left and right corridor walls for each section
+    sections.forEach((section, index) => {
+        // Skip if walls already exist
+        if (section.querySelector('.corridor-wall-left')) return;
+        
+        // Create left wall
+        const leftWall = document.createElement('div');
+        leftWall.className = 'corridor-wall corridor-wall-left';
+        
+        // Create right wall
+        const rightWall = document.createElement('div');
+        rightWall.className = 'corridor-wall corridor-wall-right';
+        
+        // Create floor and ceiling
+        const floor = document.createElement('div');
+        floor.className = 'corridor-floor';
+        
+        const ceiling = document.createElement('div');
+        ceiling.className = 'corridor-ceiling';
+        
+        // Add wall content based on section
+        const sectionId = section.id;
+        
+        if (sectionId === 'hero') {
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-pencil-ruler"></i>
+                    <h3>Desain Kreatif</h3>
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-palette"></i>
+                    <h3>Visual Menarik</h3>
+                </div>
+            `;
+        } else if (sectionId === 'portfolio') {
+            // Find actual flyer images from the portfolio section
+            const flyerImages = Array.from(document.querySelectorAll('#portfolio .flyer-image-container img'));
+            
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <h3>Portofolio Terbaik</h3>
+                    ${flyerImages[0] ? `<img src="${flyerImages[0].src}" class="corridor-img" alt="Flyer Preview">` : 
+                    '<i class="wall-icon fas fa-image"></i>'}
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <h3>Karya Berkualitas</h3>
+                    ${flyerImages[1] ? `<img src="${flyerImages[1].src}" class="corridor-img" alt="Flyer Preview">` : 
+                    '<i class="wall-icon fas fa-image"></i>'}
+                </div>
+            `;
+        } else if (sectionId === 'about') {
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-user"></i>
+                    <h3>Perkenalan</h3>
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-briefcase"></i>
+                    <h3>Pengalaman Desain</h3>
+                    <p>+3 tahun pengalaman di bidang desain grafis</p>
+                </div>
+            `;
+        } else if (sectionId === 'contact') {
+            leftWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-envelope"></i>
+                    <h3>Hubungi Segera</h3>
+                </div>
+            `;
+            rightWall.innerHTML = `
+                <div class="wall-content">
+                    <i class="wall-icon fas fa-phone"></i>
+                    <h3>Diskusi Lebih Lanjut</h3>
+                </div>
+            `;
+        }
+        
+        // Add walls, floor and ceiling to the section
+        section.appendChild(leftWall);
+        section.appendChild(rightWall);
+        section.appendChild(floor);
+        section.appendChild(ceiling);
+    });
+}
+
+// Make gallery creation more reliable
+function createGalleryHall() {
+    const portfolioSection = document.getElementById('portfolio');
+    
+    // Skip if gallery hall already exists
+    if (portfolioSection.querySelector('.gallery-hall')) return;
+    
+    console.log("Creating simplified gallery hall");
+    
+    // Create gallery hall structure with simplifications
+    const galleryHall = document.createElement('div');
+    galleryHall.className = 'gallery-hall';
+    galleryHall.style.position = 'absolute';
+    galleryHall.style.top = '0';
+    galleryHall.style.left = '0';
+    galleryHall.style.width = '100%';
+    galleryHall.style.height = '100%';
+    galleryHall.style.zIndex = '0';
+    
+    // Create background wall only (simplified approach)
+    const backWall = document.createElement('div');
+    backWall.className = 'gallery-wall gallery-wall-back';
+    backWall.style.position = 'absolute';
+    backWall.style.width = '100%'; 
+    backWall.style.height = '100%';
+    backWall.style.top = '0';
+    backWall.style.left = '0';
+    backWall.style.backgroundColor = '#f0f0f0';
+    backWall.style.boxShadow = 'inset 0 0 30px rgba(0,0,0,0.1)';
+    
+    // Assemble the gallery hall (simplified)
+    galleryHall.appendChild(backWall);
+    
+    // Add the gallery hall to the portfolio section
+    portfolioSection.style.position = 'relative';
+    portfolioSection.style.zIndex = '1';
+    
+    // Insert the gallery hall at the beginning of the portfolio section
+    portfolioSection.insertBefore(galleryHall, portfolioSection.firstChild);
+    
+    // Ensure the container is properly styled and visible
+    const portfolioContainer = portfolioSection.querySelector('.container');
+    if (portfolioContainer) {
+        portfolioContainer.style.position = 'relative';
+        portfolioContainer.style.zIndex = '2';
+    }
+    
+    console.log("Simplified gallery hall created");
+}
+
+// Back to Top Button Functionality
+const backToTopButton = document.querySelector('.back-to-top');
+const bgGradientWrapper = document.querySelector('.bg-gradient-wrapper');
+const bgGradientFade = document.querySelector('.bg-gradient-fade');
+const scrollShowThreshold = 400; // How far to scroll before showing the button
+
+// Variabel untuk deteksi arah scroll
+let lastScrollTop = 0;
+let scrollingTimeoutId = null;
+
+// Show/hide back to top button based on scroll position
+function handleScroll() {
+    const currentScrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    
+    // Mendeteksi arah scroll
+    if (currentScrollTop < lastScrollTop) {
+        // Scrolling ke atas
+        document.body.classList.add('scrolling-up');
+    } else {
+        // Scrolling ke bawah atau diam
+        document.body.classList.remove('scrolling-up');
+    }
+    
+    // Bersihkan timeout sebelumnya jika ada
+    if (scrollingTimeoutId) {
+        clearTimeout(scrollingTimeoutId);
+    }
+    
+    // Set timeout untuk menghapus class scrolling-up setelah berhenti scroll
+    scrollingTimeoutId = setTimeout(() => {
+        document.body.classList.remove('scrolling-up');
+    }, 300);
+    
+    // Simpan posisi scroll terakhir
+    lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+    
+    // Tampilkan/sembunyikan tombol
+    if (currentScrollTop > scrollShowThreshold) {
+        backToTopButton.classList.add('visible');
+    } else {
+        backToTopButton.classList.remove('visible');
+    }
+    
+    // Adjust gradient opacity based on scroll position
+    // Maximum scroll progress capped at 2000px for full effect
+    const scrollProgress = Math.min(currentScrollTop / 2000, 1);
+    bgGradientWrapper.style.opacity = 1 - (scrollProgress * 0.5); // Fade to 50% at most
+}
+
+// Scroll to top when button is clicked
+function scrollToTop() {
+    // Tambahkan kelas tambahan untuk animasi roket "boost"
+    document.body.classList.add('rocket-boosting');
+    
+    // Aktifkan efek api roket
+    if (backToTopButton) {
+        const rocketFlame = backToTopButton.querySelector('.rocket-flame');
+        if (rocketFlame) {
+            rocketFlame.style.opacity = '1';
+        }
+    }
+    
+    // Scroll ke atas dengan animasi smooth
+    window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+    });
+    
+    // Hapus kelas dan reset efek setelah animasi selesai
+    setTimeout(() => {
+        document.body.classList.remove('rocket-boosting');
+        if (backToTopButton) {
+            const rocketFlame = backToTopButton.querySelector('.rocket-flame');
+            if (rocketFlame && window.pageYOffset < 10) {
+                rocketFlame.style.opacity = '';
+            }
+        }
+    }, 1000); // Durasi sedikit lebih lama dari durasi scrolling
+}
+
+// Event listeners for back to top functionality
+window.addEventListener('scroll', handleScroll);
+if (backToTopButton) {
+    backToTopButton.addEventListener('click', scrollToTop);
+}
+
+// Initialize gradient and back to top when DOM is loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize existing functionality
+    const savedTheme = localStorage.getItem('theme') || 'dark';
+    applyTheme(savedTheme);
+
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'id';
+    setLanguage(savedLanguage);
+    
+    // Initialize flying flyers for hero section only
+    initFlyingFlyersAnimation();
+    
+    // Create gallery hall for portfolio section
+    setTimeout(createGalleryHall, 100); // Small delay to ensure DOM is ready
+    
+    // Initialize animation on scroll
+    initAnimateOnScroll();
+    
+    // Initialize custom cursor
+    initCustomCursor();
+    
+    // Initialize custom right-click menu
+    initCustomContextMenu();
+    
+    // Initialize back to top visibility
+    handleScroll();
+    
+    // Initialize client logos
+    loadClientLogos();
+    
+    // Initialize About Me Slideshow
+    initAboutMeSlideshow();
+    
+    console.log("Normal scrolling enabled for better content visibility");
+});
+
+// Image Preview Modal Functionality
+const modal = document.getElementById("imagePreviewModal");
+const modalImage = document.getElementById("modalImageContent");
+const modalCaption = document.getElementById("modalCaption");
+const closeModalButton = document.querySelector(".modal-close-button");
+const modalPrevButton = document.querySelector(".image-modal .modal-nav-button.prev");
+const modalNextButton = document.querySelector(".image-modal .modal-nav-button.next");
+
+const flyerImageElements = document.querySelectorAll(".flyer-image-container img");
+let currentImageIndex = 0;
+
+// Helper function to update modal content
+function updateModalContent(index) {
+    const imgElement = flyerImageElements[index];
+    
+    modalImage.style.opacity = 0; // Start fade out
+
+    // Give a moment for opacity to take effect before changing src and fading in
+    setTimeout(() => {
+        modalImage.src = imgElement.src;
+        // No need to force onload for opacity, browser handles image loading before display
+        modalImage.style.opacity = 1; // Start fade in
+
+        const flyerItem = imgElement.closest('.flyer-grid-item');
+        let captionText = "";
+        if (flyerItem) {
+            const titleElement = flyerItem.querySelector('.flyer-caption h3');
+            const descElement = flyerItem.querySelector('.flyer-caption p');
+            if (titleElement) captionText += titleElement.textContent;
+            if (descElement) captionText += (captionText ? " - " : "") + descElement.textContent;
+        }
+        modalCaption.textContent = captionText || imgElement.alt; 
+    }, 150); // 150ms delay, can be adjusted. Should be less than opacity transition time.
+    
+    currentImageIndex = index;
+}
+
+flyerImageElements.forEach((img, index) => {
+    img.addEventListener("click", function() {
+        modal.style.display = "block";
+        updateModalContent(index);
+    });
+});
+
+if(closeModalButton) {
+    closeModalButton.onclick = function() {
+        modal.style.display = "none";
+    }
+}
+
+// Close modal when clicking outside the image content (on the overlay)
+if (modal) {
+    modal.addEventListener('click', function(event) {
+        if (event.target === modal) { 
+            modal.style.display = "none";
+        }
+    });
+}
+
+// Modal Carousel Navigation
+if (modalPrevButton && modalNextButton) {
+    modalPrevButton.addEventListener('click', () => {
+        let newIndex = currentImageIndex - 1;
+        if (newIndex < 0) {
+            newIndex = flyerImageElements.length - 1; // Loop to last image
+        }
+        updateModalContent(newIndex);
+    });
+
+    modalNextButton.addEventListener('click', () => {
+        let newIndex = currentImageIndex + 1;
+        if (newIndex >= flyerImageElements.length) {
+            newIndex = 0; // Loop to first image
+        }
+        updateModalContent(newIndex);
+    });
+}
+
+// (Space for a new feature if needed in the future) 
+
+// Theme Toggle Functionality
+const themeToggleCheckbox = document.getElementById('theme-toggle-checkbox');
+const bodyElement = document.body;
+
+// Function to apply the selected theme
+function applyTheme(theme) {
+    const sunIcon = document.querySelector('.theme-switch-container .sun-icon');
+    const moonIcon = document.querySelector('.theme-switch-container .moon-icon');
+
+    if (theme === 'light') {
+        bodyElement.classList.add('light-mode');
+        if(themeToggleCheckbox) themeToggleCheckbox.checked = true;
+        if(sunIcon) sunIcon.style.display = 'block';
+        if(moonIcon) moonIcon.style.display = 'none';
+    } else { // Default to dark theme
+        bodyElement.classList.remove('light-mode');
+        if(themeToggleCheckbox) themeToggleCheckbox.checked = false;
+        if(sunIcon) sunIcon.style.display = 'none';
+        if(moonIcon) moonIcon.style.display = 'block';
+    }
+}
+
+// Event listener for the theme toggle
+if (themeToggleCheckbox) {
+    themeToggleCheckbox.addEventListener('change', () => {
+        if (themeToggleCheckbox.checked) {
+            applyTheme('light');
+            localStorage.setItem('theme', 'light');
+        } else {
+            applyTheme('dark');
+            localStorage.setItem('theme', 'dark');
+        }
+    });
+}
+
+// Multi-language Functionality
+const translations = {
+    en: {
+        pageTitle: "My Portfolio - Flyer Designer",
+        navLogo: "Portfolio",
+        navHome: "Home",
+        navPortfolio: "Portfolio",
+        navClients: "Clients",
+        navAbout: "About Me",
+        navContact: "Contact",
+        heroTitle: "Creative Flyer Design Services in Bitung",
+        heroSubtitle: "Helping you convey messages through attractive and effective flyer designs.",
+        heroCTA: "View Design Portfolio",
+        scrollIndicator: "Scroll",
+        portfolioTitle: "Flyer Gallery",
+        clientsTitle: "Our Clients",
+        clientsSubtitle: "Some organizations and companies that have trusted us with their design needs.",
+        flyer1Title: "Official Event Celebration",
+        flyer1Desc: "Flyer for official government holiday celebration event.",
+        flyer1Alt: "Flyer for official government holiday celebration",
+        flyer2Title: "Official Event Celebration",
+        flyer2Desc: "Flyer for official government holiday celebration event.",
+        flyer2Alt: "Flyer for official government holiday celebration",
+        flyer3Title: "Government Institution Flyer",
+        flyer3Desc: "Custom designed flyer for government institution needs.",
+        flyer3Alt: "Flyer for government institution",
+        flyer4Title: "Government Institution Flyer",
+        flyer4Desc: "Custom designed flyer for government institution needs.",
+        flyer4Alt: "Flyer for government institution",
+        flyer5Title: "Private Event Flyer",
+        flyer5Desc: "Professionally designed flyer for private corporate events.",
+        flyer5Alt: "Flyer for private event",
+        flyer6Title: "Religious Event Flyer",
+        flyer6Desc: "Elegant flyer design for religious ceremonies and events.",
+        flyer6Alt: "Flyer for religious event",
+        flyer7Title: "Official Personal Flyer",
+        flyer7Desc: "Personalized flyer design for government official needs.",
+        flyer7Alt: "Personal flyer for government official",
+        flyer8Title: "Official Personal Flyer",
+        flyer8Desc: "Personalized flyer design for government official needs.",
+        flyer8Alt: "Personal flyer for government official",
+        flyer9Title: "Institution Flyer",
+        flyer9Desc: "Professional flyer design for institutional events and announcements.",
+        flyer9Alt: "Flyer for institution",
+        flyer10Title: "Institution Flyer",
+        flyer10Desc: "Professional flyer design for institutional events and announcements.",
+        flyer10Alt: "Flyer for institution",
+        aboutTitle: "About Me",
+        aboutParagraph: "As a graphic designer from Bitung, Indonesia, I focus on creating flyers that are not only visually appealing but also informative, supporting effective communication for your needs.",
+        aboutParagraph2: "I have over 5 years of experience as a graphic designer specializing in promotional design and marketing materials. With a formal education background in Visual Communication Design, I have developed a modern and eye-catching design style to ensure your flyers get the attention they deserve.",
+        aboutParagraph3: "Besides flyer design, I also have skills in photography which helps me understand visual composition and effective use of color. My approach to design is always customer-oriented, ensuring the final result aligns with your brand's specific vision and needs.",
+        skillsTitle: "Skills:",
+        skill1: "Promotional Flyer Design",
+        skill2: "Digital Marketing Design",
+        skill3: "Branding & Visual Identity",
+        skill4: "Desktop Publishing",
+        skill5: "Adobe Creative Suite",
+        contactTitle: "Contact Me",
+        contactIntro: "Ready to bring your flyer ideas to life for your business. Contact me for further discussion!",
+        formNamePlaceholder: "Your Name",
+        formEmailPlaceholder: "Your Email (for reply)",
+        formSubjectPlaceholder: "Message Subject",
+        formMessagePlaceholder: "Your Message",
+        formSubmitButton: "Send Message via Email",
+        footerText: "Nama Anda. Flyer Design Services in Bitung.",
+        modalPreviousAriaLabel: "Previous Image",
+        modalNextAriaLabel: "Next Image",
+        widgetWhatsAppAriaLabel: "Contact via WhatsApp",
+        widgetTelegramAriaLabel: "Contact via Telegram",
+        widgetWhatsAppTooltip: "Chat on WhatsApp",
+        widgetTelegramTooltip: "Chat on Telegram",
+        contextMenuHeader: "Contact via:",
+        contextMenuWhatsApp: "WhatsApp",
+        contextMenuTelegram: "Telegram",
+        aboutPhoto1Alt: "About Me - Photo 1",
+        aboutPhoto2Alt: "About Me - Photo 2",
+        aboutPhoto3Alt: "About Me - Photo 3",
+        aboutPhoto4Alt: "About Me - Photo 4"
+    },
+    id: {
+        pageTitle: "Portfolio Saya - Desainer Flyer",
+        navLogo: "Portfolio",
+        navHome: "Beranda",
+        navPortfolio: "Portfolio",
+        navClients: "Klien",
+        navAbout: "Tentang Saya",
+        navContact: "Kontak",
+        heroTitle: "Jasa Desain Flyer Kreatif di Bitung",
+        heroSubtitle: "Membantu Anda menyampaikan pesan melalui desain flyer yang menarik dan efektif.",
+        heroCTA: "Lihat Portfolio Desain",
+        scrollIndicator: "Scroll",
+        portfolioTitle: "Galeri Flyer",
+        clientsTitle: "Klien Kami",
+        clientsSubtitle: "Beberapa instansi dan perusahaan yang telah mempercayakan kebutuhan desain mereka pada kami.",
+        flyer1Title: "Perayaan Hari Besar Pejabat",
+        flyer1Desc: "Flyer perayaan hari besar untuk pejabat.",
+        flyer1Alt: "Flyer perayaan hari besar untuk pejabat",
+        flyer2Title: "Perayaan Hari Besar Pejabat",
+        flyer2Desc: "Flyer perayaan hari besar untuk pejabat.",
+        flyer2Alt: "Flyer perayaan hari besar untuk pejabat",
+        flyer3Title: "Flyer Instansi Pemerintah",
+        flyer3Desc: "Untuk instansi pemerintah.",
+        flyer3Alt: "Flyer untuk instansi pemerintah",
+        flyer4Title: "Flyer Instansi Pemerintah",
+        flyer4Desc: "Untuk instansi pemerintah.",
+        flyer4Alt: "Flyer untuk instansi pemerintah",
+        flyer5Title: "Flyer Event Swasta",
+        flyer5Desc: "Untuk event swasta.",
+        flyer5Alt: "Flyer untuk event swasta",
+        flyer6Title: "Flyer Acara Kerohanian",
+        flyer6Desc: "Acara kerohanian.",
+        flyer6Alt: "Flyer acara kerohanian",
+        flyer7Title: "Flyer Personal Pejabat",
+        flyer7Desc: "Flyer personal pejabat.",
+        flyer7Alt: "Flyer personal pejabat",
+        flyer8Title: "Flyer Personal Pejabat",
+        flyer8Desc: "Flyer personal pejabat.",
+        flyer8Alt: "Flyer personal pejabat",
+        flyer9Title: "Flyer Instansi",
+        flyer9Desc: "Untuk flyer instansi.",
+        flyer9Alt: "Flyer untuk instansi",
+        flyer10Title: "Flyer Instansi",
+        flyer10Desc: "Untuk flyer instansi.",
+        flyer10Alt: "Flyer untuk instansi",
+        aboutTitle: "Tentang Saya",
+        aboutParagraph: "Sebagai desainer grafis dari Bitung, Indonesia, saya berfokus pada layanan pembuatan flyer yang tidak hanya menarik secara visual tetapi juga informatif, mendukung komunikasi efektif untuk kebutuhan Anda.",
+        aboutParagraph2: "Saya memiliki pengalaman lebih dari 5 tahun sebagai graphic designer dengan spesialisasi di desain promosi dan marketing material. Dengan latar belakang pendidikan formal di bidang Desain Komunikasi Visual, saya telah mengembangkan gaya desain yang modern dan eye-catching untuk memastikan flyer Anda mendapatkan perhatian yang diinginkan.",
+        aboutParagraph3: "Selain desain flyer, saya juga memiliki kemampuan dalam fotografi yang membantu saya memahami komposisi visual dan penggunaan warna yang efektif. Pendekatan saya dalam desain selalu customer-oriented, memastikan hasil akhir sesuai dengan visi dan kebutuhan spesifik brand Anda.",
+        skillsTitle: "Keahlian:",
+        skill1: "Desain Flyer Promosi",
+        skill2: "Desain Digital Marketing",
+        skill3: "Branding & Visual Identity",
+        skill4: "Desktop Publishing",
+        skill5: "Adobe Creative Suite",
+        contactTitle: "Hubungi Saya",
+        contactIntro: "Siap membantu mewujudkan ide flyer untuk bisnis Anda. Hubungi saya untuk diskusi lebih lanjut!",
+        formNamePlaceholder: "Nama Anda",
+        formEmailPlaceholder: "Email Anda (untuk balasan)",
+        formSubjectPlaceholder: "Subjek Pesan",
+        formMessagePlaceholder: "Pesan Anda",
+        formSubmitButton: "Kirim Pesan via Email",
+        footerText: "Nama Anda. Jasa Desain Flyer di Bitung.",
+        modalPreviousAriaLabel: "Gambar Sebelumnya",
+        modalNextAriaLabel: "Gambar Berikutnya",
+        widgetWhatsAppAriaLabel: "Hubungi via WhatsApp",
+        widgetTelegramAriaLabel: "Hubungi via Telegram",
+        widgetWhatsAppTooltip: "Chat di WhatsApp",
+        widgetTelegramTooltip: "Chat di Telegram",
+        contextMenuHeader: "Hubungi Via:",
+        contextMenuWhatsApp: "WhatsApp",
+        contextMenuTelegram: "Telegram",
+        aboutPhoto1Alt: "Tentang Saya - Foto 1",
+        aboutPhoto2Alt: "Tentang Saya - Foto 2",
+        aboutPhoto3Alt: "Tentang Saya - Foto 3",
+        aboutPhoto4Alt: "Tentang Saya - Foto 4"
+    }
+};
+
+const languageSelect = document.getElementById('language-select');
+
+function setLanguage(lang) {
+    // Update all elements with data-lang-id and data-lang-en attributes
+    document.querySelectorAll('[data-lang-id], [data-lang-en]').forEach(element => {
+        if (lang === 'id') {
+            if (element.hasAttribute('data-lang-id')) {
+                element.textContent = element.getAttribute('data-lang-id');
+            }
+            if (element.hasAttribute('data-lang-placeholder-id')) {
+                element.placeholder = element.getAttribute('data-lang-placeholder-id');
+            }
+            if (element.hasAttribute('data-lang-aria-label-id')) {
+                element.setAttribute('aria-label', element.getAttribute('data-lang-aria-label-id'));
+            }
+            if (element.hasAttribute('data-lang-title-id')) {
+                element.title = element.getAttribute('data-lang-title-id');
+            }
+            if (element.hasAttribute('data-lang-alt-id')) {
+                element.alt = element.getAttribute('data-lang-alt-id');
+            }
+        } else if (lang === 'en') {
+            if (element.hasAttribute('data-lang-en')) {
+                element.textContent = element.getAttribute('data-lang-en');
+            }
+            if (element.hasAttribute('data-lang-placeholder-en')) {
+                element.placeholder = element.getAttribute('data-lang-placeholder-en');
+            }
+            if (element.hasAttribute('data-lang-aria-label-en')) {
+                element.setAttribute('aria-label', element.getAttribute('data-lang-aria-label-en'));
+            }
+            if (element.hasAttribute('data-lang-title-en')) {
+                element.title = element.getAttribute('data-lang-title-en');
+            }
+            if (element.hasAttribute('data-lang-alt-en')) {
+                element.alt = element.getAttribute('data-lang-alt-en');
+            }
+        }
+    });
+
+    // Update document title
+    const titleElement = document.querySelector('title');
+    if (titleElement) {
+        if (lang === 'id' && titleElement.hasAttribute('data-lang-id')) {
+            titleElement.textContent = titleElement.getAttribute('data-lang-id');
+        } else if (lang === 'en' && titleElement.hasAttribute('data-lang-en')) {
+            titleElement.textContent = titleElement.getAttribute('data-lang-en');
+        }
+    }
+
+    // Update HTML lang attribute
+    document.documentElement.lang = lang;
+
+    // Store the selected language in localStorage
+    localStorage.setItem('selectedLanguage', lang);
+}
+
+// Initialize language from localStorage or default to 'id'
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLanguage = localStorage.getItem('selectedLanguage') || 'id';
+    setLanguage(savedLanguage);
+
+    // Set the language selector to match the current language
+    const languageSelect = document.getElementById('language-select');
+    if (languageSelect) {
+        languageSelect.value = savedLanguage;
+        // Add event listener for language selector
+        languageSelect.addEventListener('change', (e) => {
+            setLanguage(e.target.value);
+        });
+    }
+});
+
+// Animation functionality
+class AnimationManager {
+    static init() {
+        this.initFlyingFlyers();
+        this.initAnimateOnScroll();
+    }
+
+    static initFlyingFlyers() {
+        const container = document.querySelector('.hero-background-slideshow');
+        const heroSection = document.querySelector('.hero-section');
+        if (!container || !heroSection) return;
+
+        const flyers = Array.from(container.querySelectorAll('.hero-slide-image'));
+        if (flyers.length === 0) return;
+
+        this.cloneFlyers(container, flyers);
+        this.setupFlyerAnimations(container, heroSection);
+    }
+
+    static cloneFlyers(container, originalFlyers) {
+        const desiredCount = 18;
+        const currentCount = originalFlyers.length;
+        
+        for (let i = 0; i < desiredCount - currentCount; i++) {
+            const clone = originalFlyers[i % currentCount].cloneNode(true);
+            clone.classList.remove('active');
+            container.appendChild(clone);
+        }
+    }
+
+    static setupFlyerAnimations(container, heroSection) {
+        const flyers = container.querySelectorAll('.hero-slide-image');
+        const heroWidth = heroSection.offsetWidth;
+        const heroHeight = heroSection.offsetHeight;
+
+        flyers.forEach(flyer => {
+            const flyerWidth = flyer.offsetWidth || 150;
+            const flyerHeight = flyer.offsetHeight || 150;
+
+            Object.assign(flyer.style, {
+                top: `${Math.random() * (heroHeight - flyerHeight * 1.5)}px`,
+                left: `${Math.random() * (heroWidth - flyerWidth * 1.5)}px`,
+                animationDuration: `${Math.random() * 8 + 7}s`,
+                animationDelay: `${Math.random() * 5}s`
+            });
+
+            this.setFlyerCustomProperties(flyer);
+        });
+    }
+
+    static setFlyerCustomProperties(flyer) {
+        const properties = {
+            '--current-rotate': `${Math.random() * 30 - 15}deg`,
+            '--current-scale': Math.random() * 0.2 + 0.5,
+            '--fly-x-25': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-y-25': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-x-50': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-y-50': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-x-75': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`,
+            '--fly-y-75': `${(Math.random() * 20 + 10) * (Math.random() < 0.5 ? -1 : 1)}px`
+        };
+
+        Object.entries(properties).forEach(([prop, value]) => {
+            flyer.style.setProperty(prop, value);
+        });
+    }
+
+    static initAnimateOnScroll() {
+        const options = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.1
+        };
+
+        const observer = 'IntersectionObserver' in window 
+            ? new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
+                });
+            }, options)
+            : null;
+
+        document.querySelectorAll('.animate-on-scroll').forEach(element => {
+            observer ? observer.observe(element) : element.classList.add('is-visible');
+        });
+
+        this.setupFlyerGridAnimations();
+    }
+
+    static setupFlyerGridAnimations() {
+        document.querySelectorAll('.flyer-grid-item').forEach((item, index) => {
+            const randomRotation = Math.random() * 20 - 10;
+            const xOffset = Math.random() * 200 - 100;
+            const yOffset = Math.random() * 50 + 100;
+
+            item.style.setProperty('--random-rotate', `${randomRotation}deg`);
+            item.style.setProperty('--item-index', index);
+            item.style.setProperty('--x-offset', `${xOffset}px`);
+            item.style.setProperty('--y-offset', `${yOffset}px`);
+        });
+    }
+}
+
+// Theme management
+class ThemeManager {
+    static init() {
+        this.checkbox = document.getElementById('theme-toggle-checkbox');
+        this.savedTheme = localStorage.getItem('theme') || 'dark';
+        this.applyTheme(this.savedTheme);
+        this.setupListeners();
+    }
+
+    static setupListeners() {
+        this.checkbox?.addEventListener('change', () => {
+            const newTheme = this.checkbox.checked ? 'light' : 'dark';
+            this.applyTheme(newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+    }
+
+    static applyTheme(theme) {
+        const sunIcon = document.querySelector('.theme-switch-container .sun-icon');
+        const moonIcon = document.querySelector('.theme-switch-container .moon-icon');
+
+        document.body.classList.toggle('light-mode', theme === 'light');
+        if (this.checkbox) this.checkbox.checked = theme === 'light';
+        
+        if (sunIcon) sunIcon.style.display = theme === 'light' ? 'block' : 'none';
+        if (moonIcon) moonIcon.style.display = theme === 'light' ? 'none' : 'block';
+    }
+}
+
+// Initialize all animations and theme manager on DOM content loaded
+document.addEventListener('DOMContentLoaded', () => {
+    AnimationManager.init();
+    ThemeManager.init();
+});
